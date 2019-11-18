@@ -1,6 +1,5 @@
-#include "tacotuesdayconfig.h"
+#include <src/h/tacotuesdayconfig.h>
 
-TacoTuesdayConfig::TacoTuesdayConfig()
-{
-
+TacoTuesdayConfig TacoTuesdayConfig::instance() {
+    return config;
 }

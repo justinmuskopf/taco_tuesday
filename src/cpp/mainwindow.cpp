@@ -12,28 +12,27 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
 void MainWindow::initializeTabs()
 {
-    ui->generalTab->setLayout(ui->generalTabLayout);
-    ui->employeeTab->setLayout(ui->employeeTabLayout);
-    ui->orderTab->setLayout(ui->orderTabLayout);
-
-    tabs.insert(GENERAL_TAB, ui->generalTab);
-    tabs.insert(EMPLOYEE_TAB, ui->employeeTab);
-    tabs.insert(ORDER_TAB, ui->orderTab);
+    initializeGeneralTab();
+    initializeOrderTab();
+    initializeEmployeeTab();
 }
 
 void MainWindow::initializeGeneralTab()
 {
-
+    ui->generalTab->setLayout(ui->generalTabLayout);
+    tabs.insert(GENERAL_TAB, ui->generalTab);
 }
 
 void MainWindow::initializeEmployeeTab()
 {
-
+    ui->employeeTab->setLayout(ui->employeeTabLayout);
+    tabs.insert(EMPLOYEE_TAB, ui->employeeTab);
 }
 
 void MainWindow::initializeOrderTab()
 {
-
+    ui->orderTab->setLayout(ui->orderTabLayout);
+    tabs.insert(ORDER_TAB, ui->orderTab);
 }
 
 MainWindow::~MainWindow()

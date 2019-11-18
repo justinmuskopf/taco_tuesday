@@ -2,5 +2,5 @@
 
 TacoTuesdayApiHandler::TacoTuesdayApiHandler()
 {
-
+    client = new QNetworkAccessManager();
 }

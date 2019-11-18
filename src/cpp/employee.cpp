@@ -14,6 +14,5 @@ void Employee::setNickName(QString _nickName) { nickName = _nickName; }
 bool Employee::isAdmin() { return admin; }
 void Employee::setAdmin(bool _admin) { admin = _admin; }
 
-
 QString Employee::getSlackId() { return slackId; }
 void Employee::setSlackId(QString _slackId) { slackId = _slackId; }
