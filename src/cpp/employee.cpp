@@ -1,8 +1,16 @@
 #include <src/h/employee.h>
 
-Employee::Employee()
+Employee::Employee(QString _fullName, QString _slackId, bool _admin = false)
 {
-
+    fullName = _fullName;
+    slackId = _slackId;
+    admin = _admin;
+}
+    
+Employee::Employee(QString _fullName, QString _nickName, QString _slackId, bool _admin = false)
+{
+    Employee(_fullName, _slackId, _admin);
+    nickName = _nickName;
 }
 
 QString Employee::getFullName() { return fullName; }
