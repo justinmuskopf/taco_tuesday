@@ -6,7 +6,8 @@
 class Employee
 {
 public:
-    Employee();
+    Employee(QString _fullName, QString _slackId, bool _admin = false);
+    Employee(QString _fullName, QString _nickName, QString _slackId, bool _admin = false);
 
     void setFullName(QString _fullName);
     QString getFullName();
