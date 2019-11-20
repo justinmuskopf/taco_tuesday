@@ -1,4 +1,4 @@
-#include <src/h/configurationdialog.h>
+#include "src/configurationdialog.h"
 #include "ui_configurationdialog.h"
 
 ConfigurationDialog::ConfigurationDialog(QWidget *parent) :

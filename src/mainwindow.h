@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "tacotuesdayapihandler.h"
+
 #include <QMainWindow>
 #include <QMap>
 #include <QTableWidget>
@@ -26,10 +28,17 @@ private:
     QMap<QString, QWidget*> tabs;
 
     QTableWidget *employeeList;
+    TacoTuesdayApiHandler apiHandler;
 
-    void initializeTabs();
-    void initializeGeneralTab();
-    void initializeEmployeeTab();
-    void initializeOrderTab();
+    void initTabs();
+    void initGeneralTab();
+    void initEmployeeTab();
+    void initOrderTab();
+
+    void initTacos();
+    void initEmployees();
+
+    QList<Taco> tacos;
 };
+
 #endif // MAINWINDOW_H

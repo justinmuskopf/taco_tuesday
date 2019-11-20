@@ -16,24 +16,36 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    src/cpp/configurationdialog.cpp \
-    src/cpp/employee.cpp \
-    src/cpp/main.cpp \
-    src/cpp/mainwindow.cpp \ \
-    src/cpp/tacotuesdayapihandler.cpp \
-    src/cpp/tacotuesdayconfig.cpp
+    src/configurationdialog.cpp \
+    src/employee.cpp \
+    src/employeerow.cpp \
+    src/employeetable.cpp \
+    src/main.cpp \
+    src/mainwindow.cpp \
+    src/tacotuesdayapihandler.cpp \
+    src/tacotuesdayconfig.cpp \
+    src/jsonparser.cpp \
+    src/order.cpp \
+    src/fullorder.cpp \
+    src/individualorder.cpp
 
 HEADERS += \
-    src/h/employee.h \
-    src/h/employee.h \
-    src/h/tacotuesdayapihandler.h \
-    src/h/mainwindow.h \
-    src/h/configurationdialog.h \ \
-    src/h/tacotuesdayconfig.h
+    src/employee.h \
+    src/employeerow.h \
+    src/employeetable.h \
+    src/jsonparser.h \
+    src/order.h \
+    src/fullorder.h \
+    src/individualorder.h \
+    src/taco.h \
+    src/tacotuesdayapihandler.h \
+    src/mainwindow.h \
+    src/configurationdialog.h \
+    src/tacotuesdayconfig.h
 
 FORMS += \
     src/ui/configurationdialog.ui \
-    src/ui/mainwindow.ui \
+    src/ui/mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
