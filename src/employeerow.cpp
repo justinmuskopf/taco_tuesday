@@ -19,9 +19,10 @@ EmployeeRow::EmployeeRow(int _row, Employee *_employee)
 
     for (int i = 0; i < NUM_COLUMNS; i++)
     {
-        QTableWidgetItem *item = new QTableWidgetItem();
-        columns.append(item);
+        columns.append(new QTableWidgetItem());
     }
+
+    modified = false;
 
     update(_employee);
 }
@@ -74,8 +75,55 @@ void EmployeeRow::validateColumnNumber(int column)
 {
     if (column < 0 or column >= NUM_COLUMNS)
     {
-        throw "Invalid Column Number provided: " + QString::number(column);
+        throw QString("Invalid Column Number provided: %1").arg(column);
     }
+}
+
+void EmployeeRow::modify(QTableWidgetItem *modifiedColumn)
+{
+    int column = modifiedColumn->column();
+    validateColumnNumber(column);
+
+    modified = true;
+    modifiedColumns.insert(column);
+}
+
+bool EmployeeRow::isModified()
+{
+    return modified;
+}
+
+Employee *EmployeeRow::save()
+{
+    if (!modified)
+    {
+        return employee;
+    }
+
+    foreach (int colIdx, modifiedColumns)
+    {
+        QTableWidgetItem *column = columns[colIdx];
+        switch (colIdx)
+        {
+        case FULL_NAME:
+            employee->setFullName(column->text());
+            break;
+        case SLACK_ID:
+            employee->setSlackId(column->text());
+            break;
+        case NICK_NAME:
+            employee->setNickName(column->text());
+            break;
+        case ADMIN:
+            employee->setAdmin(column->checkState() == Qt::CheckState::Checked);
+            break;
+        }
+    }
+
+    modified = false;
+    modifiedColumns.clear();
+
+    return employee;
 }
 
 EmployeeRow::~EmployeeRow()

@@ -14,13 +14,20 @@ public:
 
     void addEmployee(Employee *employee);
     void setEmployees(QList<Employee *> employees);
+    void resetData(QList<Employee *> employees);
+
+    QList<Employee *> save();
 
 private:
     bool hasEmployeeRow(QString slackId);
     EmployeeRow *getEmployeeRow(QString slackId);
     void addEmployeeRow(Employee *employee);
     void setupHeader();
+
     QMap<QString, EmployeeRow *> rows;
+    QList<EmployeeRow *> orderedRows;
+private slots:
+    void onRowModify(QTableWidgetItem *row);
 };
 
 #endif // EMPLOYEETABLE_H

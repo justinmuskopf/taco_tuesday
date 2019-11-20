@@ -13,7 +13,7 @@ public:
 
     QJsonObject json();
 private:
-    QList<IndividualOrder> individualOrders;
+    QList<IndividualOrder *> individualOrders;
 };
 
 #endif // FULLORDER_H

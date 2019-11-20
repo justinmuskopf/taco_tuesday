@@ -19,6 +19,11 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_employeeRefreshButton_clicked();
+
+    void on_employeeSaveButton_clicked();
+
 private:
     const QString GENERAL_TAB = "general";
     const QString EMPLOYEE_TAB = "employee";
@@ -27,7 +32,6 @@ private:
     Ui::MainWindow *ui;
     QMap<QString, QWidget*> tabs;
 
-    QTableWidget *employeeList;
     TacoTuesdayApiHandler apiHandler;
 
     void initTabs();

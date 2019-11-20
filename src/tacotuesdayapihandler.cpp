@@ -20,7 +20,6 @@ QString TacoTuesdayApiHandler::getApiUrl(QString extension)
 
 QNetworkReply *TacoTuesdayApiHandler::getTacos()
 {
-    qDebug() << "Tacos!";
     return WebClient->get(getBaseRequest("tacos"));
 }
 
@@ -33,6 +32,13 @@ QNetworkReply *TacoTuesdayApiHandler::getFullOrders()
 {
     return WebClient->get(getBaseRequest("orders/full"));
 }
+
+QNetworkReply *TacoTuesdayApiHandler::updateEmployee(Employee *employee)
+{
+    return nullptr;//WebClient->put
+}
+
+
 
 QNetworkRequest TacoTuesdayApiHandler::getBaseRequest(QString extension)
 {

@@ -23,6 +23,7 @@ public:
     bool isAdmin();
 
     QString toString();
+
     QJsonObject json();
 
 private:

@@ -11,7 +11,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     ui->setupUi(this);
     initTabs();
     initTacos();
-    initEmployees();
 }
 
 void MainWindow::initTabs()
@@ -38,6 +37,8 @@ void MainWindow::initEmployeeTab()
 {
     ui->employeeTab->setLayout(ui->employeeTabLayout);
     tabs.insert(EMPLOYEE_TAB, ui->employeeTab);
+
+    initEmployees();
 }
 
 void MainWindow::initTacos()
@@ -50,12 +51,9 @@ void MainWindow::initTacos()
 
 void MainWindow::initEmployees()
 {
-    JsonParser *jsonParser = new JsonParser();
     QNetworkReply *r = apiHandler.getEmployees();
     connect(r, &QNetworkReply::finished, this, [=]{
-        QString response = r->readAll();
-        qDebug() << response;
-        QList<Employee *> employees = jsonParser->parseEmployees(response);
+        QList<Employee *> employees = JsonParser().parseEmployees(r->readAll());
         ui->employeeTable->setEmployees(employees);
     });
 }
@@ -63,4 +61,24 @@ void MainWindow::initEmployees()
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+
+
+void MainWindow::on_employeeRefreshButton_clicked()
+{
+    ApiReply *r = apiHandler.getEmployees();
+    connect(r, &ApiReply::finished, this, [=]{
+        QList<Employee *> employees = JsonParser().parseEmployees(r->readAll());
+        ui->employeeTable->resetData(employees);
+    });
+}
+
+void MainWindow::on_employeeSaveButton_clicked()
+{
+    QList<Employee *> employees = ui->employeeTable->save();
+    foreach(Employee *employee, employees)
+    {
+        apiHandler.updateEmployee(employee);
+    }
 }

@@ -13,6 +13,9 @@ public:
 
     QTableWidgetItem *getColumn(int column);
     QList<QTableWidgetItem *> getColumns();
+    void modify(QTableWidgetItem *modifiedColumn);
+    bool isModified();
+    Employee *save();
 
     ~EmployeeRow();
 
@@ -33,7 +36,9 @@ private:
 
     Employee *employee;
     QList<QTableWidgetItem *> columns;
+    QSet<int> modifiedColumns;
     int row;
+    bool modified;
 };
 
 #endif // EMPLOYEEROW_H
