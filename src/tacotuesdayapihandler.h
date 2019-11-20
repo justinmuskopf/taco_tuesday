@@ -26,7 +26,8 @@ public:
 private:
     static QNetworkAccessManager *WebClient;
 
-    
+    const QString apiKey = "";
+    const QString baseApiUrl = "";
 
     QString getApiUrl(QString extension);
     QNetworkRequest getBaseRequest(QString extension);
