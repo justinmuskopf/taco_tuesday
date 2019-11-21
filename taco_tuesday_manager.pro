@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets network gui
 
 CONFIG += c++11
 
@@ -22,6 +22,7 @@ SOURCES += \
     src/employeetable.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
+    src/tacotuesdayapiclient.cpp \
     src/tacotuesdayapihandler.cpp \
     src/tacotuesdayconfig.cpp \
     src/jsonparser.cpp \
@@ -38,6 +39,7 @@ HEADERS += \
     src/fullorder.h \
     src/individualorder.h \
     src/taco.h \
+    src/tacotuesdayapiclient.h \
     src/tacotuesdayapihandler.h \
     src/mainwindow.h \
     src/configurationdialog.h \

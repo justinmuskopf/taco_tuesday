@@ -21,8 +21,8 @@ public:
 
 private slots:
     void on_employeeRefreshButton_clicked();
-
     void on_employeeSaveButton_clicked();
+    void on_actionConfigure_triggered();
 
 private:
     const QString GENERAL_TAB = "general";

@@ -1,6 +1,7 @@
 #include "ui_mainwindow.h"
 #include "QPushButton"
 #include "order.h"
+#include "configurationdialog.h"
 
 #include <QNetworkReply>
 #include <src/jsonparser.h>
@@ -10,7 +11,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 {
     ui->setupUi(this);
     initTabs();
-    initTacos();
 }
 
 void MainWindow::initTabs()
@@ -31,6 +31,8 @@ void MainWindow::initOrderTab()
 {
     ui->orderTab->setLayout(ui->orderTabLayout);
     tabs.insert(ORDER_TAB, ui->orderTab);
+
+    initTacos();
 }
 
 void MainWindow::initEmployeeTab()
@@ -63,8 +65,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-
 void MainWindow::on_employeeRefreshButton_clicked()
 {
     ApiReply *r = apiHandler.getEmployees();
@@ -81,4 +81,10 @@ void MainWindow::on_employeeSaveButton_clicked()
     {
         apiHandler.updateEmployee(employee);
     }
+}
+
+void MainWindow::on_actionConfigure_triggered()
+{
+    ConfigurationDialog *dialog = new ConfigurationDialog();
+    dialog->show();
 }

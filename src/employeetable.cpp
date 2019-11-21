@@ -115,3 +115,11 @@ QList<Employee *> EmployeeTable::save()
 
     return employees;
 }
+
+EmployeeTable::~EmployeeTable()
+{
+    foreach (EmployeeRow *row, rows)
+    {
+        if (row) delete row;
+    }
+}

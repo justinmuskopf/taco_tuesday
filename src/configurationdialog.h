@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+class TacoTuesdayConfig;
+
 namespace Ui {
 class ConfigurationDialog;
 }
@@ -15,8 +17,12 @@ public:
     explicit ConfigurationDialog(QWidget *parent = nullptr);
     ~ConfigurationDialog();
 
+private slots:
+    void on_ConfigurationDialog_accepted();
+
 private:
     Ui::ConfigurationDialog *ui;
+    TacoTuesdayConfig *config;
 };
 
 #endif // CONFIGURATIONDIALOG_H

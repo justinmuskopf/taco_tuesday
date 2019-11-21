@@ -93,6 +93,11 @@ bool EmployeeRow::isModified()
     return modified;
 }
 
+int EmployeeRow::rowIndex()
+{
+    return row;
+}
+
 Employee *EmployeeRow::save()
 {
     if (!modified)

@@ -15,6 +15,7 @@ public:
     QList<QTableWidgetItem *> getColumns();
     void modify(QTableWidgetItem *modifiedColumn);
     bool isModified();
+    int rowIndex();
     Employee *save();
 
     ~EmployeeRow();

@@ -11,6 +11,7 @@ class EmployeeTable : public QTableWidget
 {
 public:
     EmployeeTable(QWidget *parent = nullptr);
+    ~EmployeeTable();
 
     void addEmployee(Employee *employee);
     void setEmployees(QList<Employee *> employees);
