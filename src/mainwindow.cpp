@@ -4,6 +4,9 @@
 #include "configurationdialog.h"
 
 #include <QNetworkReply>
+#include <QDebug>
+#include <QObject>
+#include <QTimer>
 #include <src/jsonparser.h>
 #include <src/mainwindow.h>
 
@@ -11,6 +14,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 {
     ui->setupUi(this);
     initTabs();
+
+    ui->requestCooldownBar->setValue(0);
+    connect(&apiHandler, &TacoTuesdayApiHandler::on_request, this, &MainWindow::on_coolDown_triggered);
+    connect(ui->requestCooldownBar, &CooldownBar::cooled, this, &MainWindow::enableEmployeeButtons);
 }
 
 void MainWindow::initTabs()
@@ -55,6 +62,11 @@ void MainWindow::initEmployees()
 {
     QNetworkReply *r = apiHandler.getEmployees();
     connect(r, &QNetworkReply::finished, this, [=]{
+        if (r->error()) {
+            qDebug() << r->errorString();
+            return;
+        }
+
         QList<Employee *> employees = JsonParser().parseEmployees(r->readAll());
         ui->employeeTable->setEmployees(employees);
     });
@@ -69,6 +81,12 @@ void MainWindow::on_employeeRefreshButton_clicked()
 {
     ApiReply *r = apiHandler.getEmployees();
     connect(r, &ApiReply::finished, this, [=]{
+        if (r->error())
+        {
+            qDebug() << r->errorString();
+            return;
+        }
+
         QList<Employee *> employees = JsonParser().parseEmployees(r->readAll());
         ui->employeeTable->resetData(employees);
     });
@@ -86,5 +104,24 @@ void MainWindow::on_employeeSaveButton_clicked()
 void MainWindow::on_actionConfigure_triggered()
 {
     ConfigurationDialog *dialog = new ConfigurationDialog();
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->show();
+}
+
+void MainWindow::disableEmployeeButtons()
+{
+    ui->employeeSaveButton->setEnabled(false);
+    ui->employeeRefreshButton->setEnabled(false);
+}
+
+void MainWindow::enableEmployeeButtons()
+{
+    ui->employeeSaveButton->setEnabled(true);
+    ui->employeeRefreshButton->setEnabled(true);
+}
+
+void MainWindow::on_coolDown_triggered()
+{
+    disableEmployeeButtons();
+    ui->requestCooldownBar->beginCoolingSequence();
 }

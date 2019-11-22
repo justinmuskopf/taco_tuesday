@@ -16,7 +16,7 @@ public:
     ApiReply *get(QString path);
 
 signals:
-
+    void configured(bool configured);
 public slots:
     void on_apiKey_updated(QString apiKey);
     void on_apiBaseUrl_updated(QString apiBaseUrl);

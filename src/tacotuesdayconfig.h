@@ -17,11 +17,16 @@ public:
 
     QString ApiKey();
     QString ApiBaseUrl();
+    int CooldownMs();
+    int NumSteps();
+
 
     friend class ConfigurationDialog;
 signals:
     void on_apiKey_changed(QString apiKey);
     void on_apiBaseUrl_changed(QString apiBaseUrl);
+    void on_cooldownMs_changed(int cooldownMs);
+    void on_numSteps_changed(int numSteps);
 private:
     const QString CONFIG_FILENAME = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/tt_conf.ini";
 
@@ -33,13 +38,17 @@ private:
     QString get(QString key);
     void set(QString key, QString value);
 
-    QString apiKey;
-    QString apiBaseUrl;
-
-    bool configured = true;
-
     void setApiKey(QString _apiKey);
     void setApiBaseUrl(QString _apiBaseUrl);
+    void setCooldownMs(int _cooldownMs);
+    void setNumSteps(int _numSteps);
+
+    QString apiKey;
+    QString apiBaseUrl;
+    QString cooldownMs = "2000";
+    QString numSteps = "10";
+
+    bool configured = true;
 };
 
 #endif // TACOTUESDAYCONFIG_H

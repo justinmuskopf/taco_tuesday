@@ -24,6 +24,10 @@ public:
     QNetworkReply *getFullOrderById(QString id);
 
     QNetworkReply *updateEmployee(Employee *employee);
+
+signals:
+    void on_request();
+
 private:
     static TacoTuesdayApiClient *WebClient;
 };

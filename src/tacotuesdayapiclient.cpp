@@ -51,6 +51,7 @@ ApiRequest TacoTuesdayApiClient::getBaseRequest(QString extension)
 
 ApiReply *TacoTuesdayApiClient::get(QString path)
 {
+
     QNetworkRequest r = getBaseRequest(path);
     return QNetworkAccessManager::get(r);
 }

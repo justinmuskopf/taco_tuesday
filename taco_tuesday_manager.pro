@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     src/configurationdialog.cpp \
+    src/cooldownbar.cpp \
     src/employee.cpp \
     src/employeerow.cpp \
     src/employeetable.cpp \
@@ -31,6 +32,7 @@ SOURCES += \
     src/individualorder.cpp
 
 HEADERS += \
+    src/cooldownbar.h \
     src/employee.h \
     src/employeerow.h \
     src/employeetable.h \

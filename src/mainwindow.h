@@ -23,6 +23,9 @@ private slots:
     void on_employeeRefreshButton_clicked();
     void on_employeeSaveButton_clicked();
     void on_actionConfigure_triggered();
+    void on_coolDown_triggered();
+    void enableEmployeeButtons();
+    void disableEmployeeButtons();
 
 private:
     const QString GENERAL_TAB = "general";
@@ -31,13 +34,19 @@ private:
 
     Ui::MainWindow *ui;
     QMap<QString, QWidget*> tabs;
+    QTimer *cooldownTimer;
 
     TacoTuesdayApiHandler apiHandler;
+    int progress = 0;
+    int cooldownMs = 2000;
+    int steps = 10;
+    int stepCount = 0;
 
     void initTabs();
     void initGeneralTab();
     void initEmployeeTab();
     void initOrderTab();
+    void cooldownRoutine(int msPerStep);
 
     void initTacos();
     void initEmployees();

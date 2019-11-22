@@ -21,6 +21,8 @@ private slots:
     void on_ConfigurationDialog_accepted();
 
 private:
+    static const int MAX_COOLDOWN_MS = 3000;
+
     Ui::ConfigurationDialog *ui;
     TacoTuesdayConfig *config;
 };
