@@ -15,5 +15,10 @@ Order::Order() : QObject(nullptr)
         connect(reply, &ApiReply::finished, this, [=]{
             Tacos = JsonParser().parseTacos(reply->readAll());
         });
+
+        foreach (Taco taco, Tacos)
+        {
+            tacoCounts[taco.type] = 0;
+        }
     }
 }

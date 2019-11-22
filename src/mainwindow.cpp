@@ -15,9 +15,12 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     ui->setupUi(this);
     initTabs();
 
+    requestButtons.append(ui->employeeRefreshButton);
+    requestButtons.append(ui->employeeSaveButton);
+
     ui->requestCooldownBar->setValue(0);
     connect(&apiHandler, &TacoTuesdayApiHandler::on_request, this, &MainWindow::on_coolDown_triggered);
-    connect(ui->requestCooldownBar, &CooldownBar::cooled, this, &MainWindow::enableEmployeeButtons);
+    connect(ui->requestCooldownBar, &CooldownBar::cooled, this, &MainWindow::enableRequestButtons);
 }
 
 void MainWindow::initTabs()
@@ -95,7 +98,7 @@ void MainWindow::on_employeeRefreshButton_clicked()
 void MainWindow::on_employeeSaveButton_clicked()
 {
     QList<Employee *> employees = ui->employeeTable->save();
-    foreach(Employee *employee, employees)
+    foreach (Employee *employee, employees)
     {
         apiHandler.updateEmployee(employee);
     }
@@ -108,20 +111,24 @@ void MainWindow::on_actionConfigure_triggered()
     dialog->show();
 }
 
-void MainWindow::disableEmployeeButtons()
+void MainWindow::disableRequestButtons()
 {
-    ui->employeeSaveButton->setEnabled(false);
-    ui->employeeRefreshButton->setEnabled(false);
+    foreach (QPushButton *button, requestButtons)
+    {
+        button->setEnabled(false);
+    }
 }
 
-void MainWindow::enableEmployeeButtons()
+void MainWindow::enableRequestButtons()
 {
-    ui->employeeSaveButton->setEnabled(true);
-    ui->employeeRefreshButton->setEnabled(true);
+    foreach (QPushButton *button, requestButtons)
+    {
+        button->setEnabled(true);
+    }
 }
 
 void MainWindow::on_coolDown_triggered()
 {
-    disableEmployeeButtons();
+    disableRequestButtons();
     ui->requestCooldownBar->beginCoolingSequence();
 }

@@ -14,6 +14,9 @@ class Order : public QObject
     Q_OBJECT
 public:
     Order();
+    float price(float pastorPrice);
+signals:
+    void updated(Order *order);
 private:
     static QList<Taco> Tacos;
     QMap<QString, int> tacoCounts;

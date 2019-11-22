@@ -5,6 +5,7 @@
 
 #include <QMainWindow>
 #include <QMap>
+#include <QPushButton>
 #include <QTableWidget>
 
 QT_BEGIN_NAMESPACE
@@ -24,8 +25,8 @@ private slots:
     void on_employeeSaveButton_clicked();
     void on_actionConfigure_triggered();
     void on_coolDown_triggered();
-    void enableEmployeeButtons();
-    void disableEmployeeButtons();
+    void enableRequestButtons();
+    void disableRequestButtons();
 
 private:
     const QString GENERAL_TAB = "general";
@@ -35,6 +36,7 @@ private:
     Ui::MainWindow *ui;
     QMap<QString, QWidget*> tabs;
     QTimer *cooldownTimer;
+    QList<QPushButton *> requestButtons;
 
     TacoTuesdayApiHandler apiHandler;
     int progress = 0;

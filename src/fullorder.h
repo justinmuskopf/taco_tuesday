@@ -11,9 +11,14 @@ class FullOrder : public Order
 public:
     FullOrder();
 
+    void addOrder(IndividualOrder *order);
+    void updateOrder(IndividualOrder *order);
+
     QJsonObject json();
 private:
-    QList<IndividualOrder *> individualOrders;
+    QMap<QString, IndividualOrder *> individualOrders;
+private slots:
+    void on_order_updated(IndividualOrder *);
 };
 
 #endif // FULLORDER_H

@@ -1,6 +1,6 @@
 #include "individualorder.h"
 
-IndividualOrder::IndividualOrder()
+IndividualOrder::IndividualOrder() : Order()
 {
 
 }
