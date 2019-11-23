@@ -15,10 +15,22 @@ Order::Order() : QObject(nullptr)
         connect(reply, &ApiReply::finished, this, [=]{
             Tacos = JsonParser().parseTacos(reply->readAll());
         });
+    }
+}
 
-        foreach (Taco taco, Tacos)
-        {
-            tacoCounts[taco.type] = 0;
-        }
+void Order::initTacoCounts()
+{
+    foreach (Taco taco, Tacos)
+    {
+        tacoCounts[taco.type] = 0;
+    }
+}
+
+float Order::price(float pastorPrice)
+{
+    float total = 0;
+    foreach (Taco taco, Tacos)
+    {
+        total += taco.type == "PASTOR" ? tacoCounts[taco.type] * pastorPrice : tacoCounts[taco.type] * taco.price;
     }
 }

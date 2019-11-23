@@ -1,4 +1,3 @@
-#include <QNetworkReply>
 #include <QDebug>
 #include <QUrlQuery>
 #include <QObject>
@@ -7,32 +6,36 @@
 
 TacoTuesdayApiClient *TacoTuesdayApiHandler::WebClient = TacoTuesdayApiClient::Instance();
 
+
 TacoTuesdayApiHandler::TacoTuesdayApiHandler()
 {
 
 }
 
-QNetworkReply *TacoTuesdayApiHandler::getTacos()
+ApiReply *TacoTuesdayApiHandler::request(TTRequests requestType, TTOperations operation, QByteArray json, QString id)
 {
     emit on_request();
-    return WebClient->get("tacos");
+    return WebClient->request(operation, requestType, json, id);
 }
 
-QNetworkReply *TacoTuesdayApiHandler::getEmployees()
+ApiReply *TacoTuesdayApiHandler::getTacos()
 {
-    emit on_request();
-    return WebClient->get("employees");
+    return request(TTRequests::TACOS, TTOperations::GET);
 }
 
-QNetworkReply *TacoTuesdayApiHandler::getFullOrders()
+ApiReply *TacoTuesdayApiHandler::getEmployees()
 {
-    emit on_request();
-    return WebClient->get("orders/full");
+    return request(TTRequests::EMPLOYEES, TTOperations::GET);
 }
 
-QNetworkReply *TacoTuesdayApiHandler::updateEmployee(Employee *employee)
+ApiReply *TacoTuesdayApiHandler::getFullOrders()
+{
+
+    return request(TTRequests::FULL_ORDERS, TTOperations::GET);
+}
+
+ApiReply *TacoTuesdayApiHandler::updateEmployee(Employee *employee)
 {
     qDebug() << employee->json();
-    emit on_request();
     return nullptr;//WebClient->put
 }

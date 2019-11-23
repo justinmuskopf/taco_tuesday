@@ -108,3 +108,29 @@ QList<Taco> JsonParser::parseTacos(QString json)
     return tacos;
 }
 
+Order *JsonParser::parseOrder(QJsonObject orderObject)
+{
+
+}
+
+IndividualOrder *JsonParser::parseIndividualOrder(QJsonObject orderObject)
+{
+    IndividualOrder *o = new IndividualOrder();
+
+
+}
+
+QList<IndividualOrder *> JsonParser::parseIndividualOrders(QString json)
+{
+
+}
+
+FullOrder *JsonParser::parseFullOrder(QJsonObject orderObject)
+{
+
+}
+
+QList<FullOrder *> JsonParser::parseFullOrders(QString json)
+{
+
+}

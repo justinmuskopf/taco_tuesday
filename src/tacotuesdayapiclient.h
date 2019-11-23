@@ -11,10 +11,7 @@ typedef QNetworkRequest ApiRequest;
 class TacoTuesdayApiClient : public QNetworkAccessManager
 {
 public:
-    static TacoTuesdayApiClient *Instance();
-
-    ApiReply *get(QString path);
-
+    friend class TacoTuesdayApiHandler;
 signals:
     void configured(bool configured);
 public slots:
@@ -26,23 +23,47 @@ private:
 
     static TacoTuesdayApiClient *instance;
 
+    static TacoTuesdayApiClient *Instance();
+
+    enum HttpOperation
+    {
+        GET,
+        POST,
+        PATCH
+    };
+
+    enum TacoTuesdayRequests
+    {
+        TACOS,
+        EMPLOYEES,
+        EMPLOYEE_BY_SLACK_ID,
+        FULL_ORDERS,
+        FULL_ORDER_BY_ID,
+        INDIVIDUAL_ORDERS,
+        INDIVIDUAL_ORDER_BY_ID
+    };
+
+    ApiReply *get(TacoTuesdayRequests requestType, QString id = nullptr);
+    ApiReply *post(TacoTuesdayRequests requestType, QByteArray json, QString id = QString());
+    ApiReply *patch(TacoTuesdayRequests requestType, QByteArray json, QString id = QString());
+    ApiReply *request(HttpOperation op, TacoTuesdayRequests requestType, QByteArray json = QByteArray(), QString id = QString());
+    ApiReply *request(HttpOperation op, TacoTuesdayRequests requestType, QString id = QString());
+
     QString getApiUrl(QString extension);
     ApiRequest getBaseRequest(QString extension);
 
     QString apiKey;
     QString apiBaseUrl;
 
-    enum TacoTuesdayRequests
+    const QStringList TacoTuesdayPaths
     {
-        GET_TACOS,
-        GET_EMPLOYEES,
-        GET_EMPLOYEE_BY_SLACK_ID,
-        GET_FULL_ORDERS,
-        GET_FULL_ORDER_BY_ID,
-        GET_INDIVIDUAL_ORDERS,
-        GET_INDIVIDUAL_ORDER_BY_ID,
-        CREATE_EMPLOYEE,
-        CREATE_FULL_ORDER,
+        "/tacos",
+        "/employees",
+        "/employees/%1",
+        "/orders/full",
+        "/orders/full/%1",
+        "/orders/individual",
+        "/orders/individual/%1",
     };
 };
 

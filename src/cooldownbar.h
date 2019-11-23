@@ -17,7 +17,7 @@ signals:
     void cooled();
 private:
     static const int DEFAULT_COOLDOWN = 2000;
-    static const int DEFAULT_STEPS = 10;
+    static const int DEFAULT_STEPS = 50;
 
     QTimer *timer;
 

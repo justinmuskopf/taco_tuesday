@@ -14,10 +14,13 @@ class Order : public QObject
     Q_OBJECT
 public:
     Order();
+    void addTacos(QString tacoType, int count);
     float price(float pastorPrice);
 signals:
     void updated(Order *order);
 private:
+    void initTacoCounts();
+
     static QList<Taco> Tacos;
     QMap<QString, int> tacoCounts;
 };

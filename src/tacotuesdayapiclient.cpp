@@ -49,9 +49,45 @@ ApiRequest TacoTuesdayApiClient::getBaseRequest(QString extension)
     return QNetworkRequest(url);
 }
 
-ApiReply *TacoTuesdayApiClient::get(QString path)
+ApiReply *TacoTuesdayApiClient::request(HttpOperation op, TacoTuesdayRequests requestType, QByteArray json, QString id)
 {
+    QString path = TacoTuesdayPaths[requestType];
+    if (id != nullptr && !id.isEmpty())
+    {
+        path = path.arg(id);
+    }
 
     QNetworkRequest r = getBaseRequest(path);
-    return QNetworkAccessManager::get(r);
+
+    switch (op)
+    {
+    case GET:
+        return QNetworkAccessManager::get(r);
+    case POST:
+        return QNetworkAccessManager::post(r, json);
+    case PATCH:
+        return nullptr; // TODO
+    }
+}
+
+ApiReply *TacoTuesdayApiClient::request(HttpOperation op, TacoTuesdayRequests requestType, QString id)
+{
+    return request(op, requestType, nullptr, id);
+}
+
+ApiReply *TacoTuesdayApiClient::get(TacoTuesdayRequests requestType, QString id)
+{
+    return request(GET, requestType, id);
+}
+
+ApiReply *TacoTuesdayApiClient::post(TacoTuesdayRequests requestType, QByteArray json, QString id)
+{
+    return request(POST, requestType, json, id);
+}
+
+ApiReply *TacoTuesdayApiClient::patch(TacoTuesdayRequests requestType, QByteArray json, QString id)
+{
+    //QNetworkRequest r = getBaseRequest(TacoTuesdayPaths[requestType]);
+    //return QNetworkAccessManager::get(r);
+    return nullptr;
 }

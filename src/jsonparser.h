@@ -6,7 +6,8 @@
 
 #include "taco.h"
 #include "employee.h"
-
+#include "fullorder.h"
+#include "individualorder.h"
 
 class JsonParser
 {
@@ -20,6 +21,15 @@ public:
 
     Taco parseTaco(QJsonObject tacoObject);
     QList<Taco> parseTacos(QString json);
+
+    Order *parseOrder(QJsonObject orderObject);
+
+    IndividualOrder *parseIndividualOrder(QJsonObject orderObject);
+    QList<IndividualOrder *> parseIndividualOrders(QString json);
+
+    FullOrder *parseFullOrder(QJsonObject orderObject);
+    QList<FullOrder *> parseFullOrders(QString json);
+
 private:
     QJsonDocument getJsonDocument(QString json);
 };

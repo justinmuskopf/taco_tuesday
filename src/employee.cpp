@@ -1,5 +1,6 @@
 #include <src/employee.h>
 #include <QDebug>
+#include <QJsonDocument>
 
 Employee::Employee() {}
 
@@ -34,7 +35,7 @@ QString Employee::toString()
     return s;
 }
 
-QJsonObject Employee::json()
+QByteArray Employee::json()
 {
     QJsonObject o;
     o["fullName"] = fullName;
@@ -42,5 +43,5 @@ QJsonObject Employee::json()
     o["nickName"] = nickName;
     o["admin"] = admin;
 
-    return o;
+    return QJsonDocument(o).toJson();
 }

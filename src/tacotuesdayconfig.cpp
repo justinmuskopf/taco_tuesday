@@ -8,6 +8,8 @@ TacoTuesdayConfig::TacoTuesdayConfig()
 {
     apiKey = get("api/key");
     apiBaseUrl = get("api/baseUrl");
+    cooldownMs = get("cooldownMs");
+    numSteps = get("numCooldownSteps");
 }
 
 TacoTuesdayConfig *TacoTuesdayConfig::Instance()
@@ -41,7 +43,7 @@ void TacoTuesdayConfig::setCooldownMs(int _cooldownMs)
     QString num = QString::number(_cooldownMs);
 
     set("cooldownMs", num);
-    cooldownMs = cooldownMs;
+    cooldownMs = num;
 
     emit on_cooldownMs_changed(_cooldownMs);
 }

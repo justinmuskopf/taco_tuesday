@@ -110,7 +110,9 @@ QList<Employee *> EmployeeTable::save()
     QList<Employee *> employees;
     foreach (EmployeeRow *row, rows)
     {
-        employees << row->save();
+        if (row->isModified()) {
+            employees << row->save();
+        }
     }
 
     return employees;

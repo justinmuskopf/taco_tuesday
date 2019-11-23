@@ -13,10 +13,10 @@ public:
 
     QTableWidgetItem *getColumn(int column);
     QList<QTableWidgetItem *> getColumns();
+    Employee *save();
     void modify(QTableWidgetItem *modifiedColumn);
     bool isModified();
     int rowIndex();
-    Employee *save();
 
     ~EmployeeRow();
 

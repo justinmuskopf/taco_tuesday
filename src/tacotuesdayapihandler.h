@@ -17,19 +17,25 @@ class TacoTuesdayApiHandler : public QObject
 public:
     explicit TacoTuesdayApiHandler();
 
-    QNetworkReply *getTacos();
-    QNetworkReply *getEmployees();
-    QNetworkReply *getEmployeeBySlackId(QString slackId);
-    QNetworkReply *getFullOrders();
-    QNetworkReply *getFullOrderById(QString id);
+    ApiReply *getTacos();
+    ApiReply *getEmployees();
+    ApiReply *getEmployeeBySlackId(QString slackId);
+    ApiReply *getFullOrders();
+    ApiReply *getFullOrderById(QString id);
 
-    QNetworkReply *updateEmployee(Employee *employee);
+    ApiReply *updateEmployee(Employee *employee);
 
 signals:
     void on_request();
 
 private:
+    typedef TacoTuesdayApiClient::TacoTuesdayRequests TTRequests;
+    typedef TacoTuesdayApiClient::HttpOperation TTOperations;
+
+    ApiReply *request(TTRequests requestType, TTOperations operation, QByteArray json="", QString id="");
+
     static TacoTuesdayApiClient *WebClient;
+    static QList<Taco> tacos;
 };
 
 #endif // TACOTUESDAYAPIHANDLER_H

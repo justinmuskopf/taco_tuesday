@@ -9,11 +9,6 @@ ConfigurationDialog::ConfigurationDialog(QWidget *parent) :
     ui->setupUi(this);
     config = TacoTuesdayConfig::Instance();
 
-    ui->apiKeyInput->setText(config->ApiKey());
-    ui->apiBaseUrlInput->setText(config->ApiBaseUrl());
-    ui->pBarRefreshRateSlider->setValue(config->NumSteps());
-    ui->cooldownDurationSlider->setValue(config->CooldownMs());
-
     connect(ui->cooldownDurationSlider, &QSlider::valueChanged, ui->cooldownDurationBox, [&](int value){
        ui->cooldownDurationBox->setText(QString::number(value) + " ms");
     });
@@ -21,6 +16,11 @@ ConfigurationDialog::ConfigurationDialog(QWidget *parent) :
     connect(ui->pBarRefreshRateSlider, &QSlider::valueChanged, ui->pBarRefreshRateBox, [&](int value){
         ui->pBarRefreshRateBox->setText(QString::number(value) + "%");
     });
+
+    ui->apiKeyInput->setText(config->ApiKey());
+    ui->apiBaseUrlInput->setText(config->ApiBaseUrl());
+    ui->pBarRefreshRateSlider->setValue(config->NumSteps());
+    ui->cooldownDurationSlider->setValue(config->CooldownMs());
 
     setModal(true);
     show();

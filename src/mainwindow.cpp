@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
     requestButtons.append(ui->employeeRefreshButton);
     requestButtons.append(ui->employeeSaveButton);
+    requestButtons.append(ui->generalRefreshButton);
 
     ui->requestCooldownBar->setValue(0);
     connect(&apiHandler, &TacoTuesdayApiHandler::on_request, this, &MainWindow::on_coolDown_triggered);

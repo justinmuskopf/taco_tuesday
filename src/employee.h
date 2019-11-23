@@ -1,6 +1,7 @@
 #ifndef EMPLOYEE_H
 #define EMPLOYEE_H
 
+
 #include <QJsonObject>
 #include <QString>
 
@@ -23,9 +24,7 @@ public:
     bool isAdmin();
 
     QString toString();
-
-    QJsonObject json();
-
+    QByteArray json();
 private:
     QString fullName;
     QString nickName;
