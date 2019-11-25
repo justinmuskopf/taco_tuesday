@@ -27,3 +27,15 @@ float Taco::getPrice()
 {
     return price;
 }
+
+QJsonObject Taco::serialize()
+{
+    QJsonObject o;
+    o["type"] = type;
+    o["name"] = name;
+    o["price"] = price;
+
+    return o;
+}
+
+Taco::~Taco() {}

@@ -56,18 +56,20 @@ void MainWindow::initEmployeeTab()
 
 void MainWindow::initTacos()
 {
-    apiHandler.requestTacos();
-    connect(&apiHandler, &TacoTuesdayApiHandler::on_finished_getting_tacos, [=](QList<Taco> tacos){
+    connect(&apiHandler, &TacoTuesdayApiHandler::on_finished_getting_tacos, [=](QList<Taco *> tacos){
         qDebug() << tacos;
     });
+
+    apiHandler.requestTacos();
 }
 
 void MainWindow::initEmployees()
 {
-    apiHandler.requestEmployees();
     connect(&apiHandler, &TacoTuesdayApiHandler::on_finished_getting_employees, [=](QList<Employee *> employees){
         ui->employeeTable->resetData(employees);
     });
+
+    apiHandler.requestEmployees();
 }
 
 MainWindow::~MainWindow()

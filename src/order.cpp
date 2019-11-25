@@ -13,10 +13,10 @@ Order::Order() : QObject(nullptr), DomainObject(DomainRealm::DOMAIN, "Order")
     {
         TacoTuesdayApiHandler handler;
         handler.requestTacos();
-        connect(&handler, &TacoTuesdayApiHandler::on_finished_getting_tacos, [=](QList<Taco> tacos){
-            foreach (Taco taco, tacos)
+        connect(&handler, &TacoTuesdayApiHandler::on_finished_getting_tacos, [=](QList<Taco *> tacos){
+            foreach (Taco *taco, tacos)
             {
-                TacoPrices[taco.getType()] = taco.getPrice();
+                TacoPrices[taco->getType()] = taco->getPrice();
             }
         });
     }
@@ -50,7 +50,7 @@ void Order::addTacos(QString tacoType, int count)
 {
     if (!TacoPrices.contains(tacoType))
     {
-        logger->warning("Wrong taco type provided to order: " + tacoType + "!");
+        return logger->warning("Wrong taco type provided to order: " + tacoType + "!");
     }
 
     if (!tacosInOrder.contains(tacoType))
@@ -60,4 +60,19 @@ void Order::addTacos(QString tacoType, int count)
 
     tacosInOrder[tacoType] += count;
 }
+
+QJsonObject Order::serialize(float pastorPrice)
+{
+    QJsonObject o;
+    foreach (QString tacoType, tacosInOrder.keys())
+    {
+        o[tacoType] = tacosInOrder[tacoType];
+    }
+
+    o["total"] = price(pastorPrice);
+
+    return o;
+}
+
+QJsonObject Order::serialize() { return serialize(TacoPrices[Taco::PastorType]); }
 

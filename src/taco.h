@@ -2,13 +2,13 @@
 #define TACO_H
 
 #include "domainobject.h"
-
 #include <QString>
 
 class Taco : public DomainObject
 {
 public:
     Taco(QString type, QString name, float price);
+    ~Taco() override;
 
     static QString PastorType;
     static bool isPastor(QString type);

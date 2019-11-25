@@ -32,7 +32,7 @@ signals:
     void on_finished_getting_employees(QList<Employee *> employees);
     void on_finished_getting_employee_by_slack_id(Employee *employee);
     void on_finished_getting_orders(QList<FullOrder *> orders);
-    void on_finished_getting_tacos(QList<Taco> tacos);
+    void on_finished_getting_tacos(QList<Taco *> tacos);
 
     void on_finished_updating_employee(int transId, Employee *employee);
 private:
