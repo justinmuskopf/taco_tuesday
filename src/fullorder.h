@@ -10,11 +10,12 @@ class FullOrder : public Order
 {
 public:
     FullOrder();
+    FullOrder(Order *);
 
     void addOrder(IndividualOrder *order);
     void updateOrder(IndividualOrder *order);
 
-    QJsonObject json();
+    QJsonObject serialize() override;
 private:
     QMap<QString, IndividualOrder *> individualOrders;
 private slots:

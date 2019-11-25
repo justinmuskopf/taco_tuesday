@@ -5,24 +5,37 @@
 #include <QString>
 #include <QMap>
 #include <QObject>
+#include "jsonparser.h"
 
 #include "taco.h"
 #include "tacotuesdayapihandler.h"
+#include "domainobject.h"
 
-class Order : public QObject
+
+typedef QMap<QString, float> TacoPriceMap;
+typedef QMap<QString, int> OrderedTacoMap;
+
+class Order : public QObject, public DomainObject
 {
     Q_OBJECT
 public:
     Order();
+    Order(Order *);
+
     void addTacos(QString tacoType, int count);
     float price(float pastorPrice);
+    OrderedTacoMap getTacoCounts();
+
+    QJsonObject serialize() override;
+    QJsonObject serialize(float pastorPrice);
+
+    friend Order *JsonParser::parseOrder(QJsonObject order);
 signals:
     void updated(Order *order);
 private:
-    void initTacoCounts();
-
-    static QList<Taco> Tacos;
-    QMap<QString, int> tacoCounts;
+    static TacoPriceMap TacoPrices;
+protected:
+    OrderedTacoMap tacosInOrder;
 };
 
 #endif // ORDER_H

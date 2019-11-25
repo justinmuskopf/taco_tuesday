@@ -1,11 +1,15 @@
 #ifndef TACOTUESDAYAPICLIENT_H
 #define TACOTUESDAYAPICLIENT_H
 
+#include "apireply.h"
+#include "domainobject.h"
+#include "jsonparser.h"
+
 #include <QNetworkAccessManager>
 #include <QObject>
 #include <QSettings>
+#include <QJsonObject>
 
-typedef QNetworkReply ApiReply;
 typedef QNetworkRequest ApiRequest;
 
 class TacoTuesdayApiClient : public QNetworkAccessManager
@@ -14,6 +18,7 @@ public:
     friend class TacoTuesdayApiHandler;
 signals:
     void configured(bool configured);
+    void transaction_complete(int transactionId, QList<DomainObject *> domainObjects);
 public slots:
     void on_apiKey_updated(QString apiKey);
     void on_apiBaseUrl_updated(QString apiBaseUrl);
@@ -21,9 +26,11 @@ public slots:
 private:
     TacoTuesdayApiClient(QObject *parent = nullptr);
 
-    static TacoTuesdayApiClient *instance;
-
     static TacoTuesdayApiClient *Instance();
+    static TacoTuesdayApiClient *instance;
+    static int transactionId;
+
+    int nextTransactionId();
 
     enum HttpOperation
     {
@@ -43,14 +50,15 @@ private:
         INDIVIDUAL_ORDER_BY_ID
     };
 
-    ApiReply *get(TacoTuesdayRequests requestType, QString id = nullptr);
-    ApiReply *post(TacoTuesdayRequests requestType, QByteArray json, QString id = QString());
-    ApiReply *patch(TacoTuesdayRequests requestType, QByteArray json, QString id = QString());
-    ApiReply *request(HttpOperation op, TacoTuesdayRequests requestType, QByteArray json = QByteArray(), QString id = QString());
-    ApiReply *request(HttpOperation op, TacoTuesdayRequests requestType, QString id = QString());
+    ApiReply *request(HttpOperation op, TacoTuesdayRequests requestType, QList<DomainObject *> (JsonParser::*jpMethod)(QString),
+                      QJsonObject json = QJsonObject(), QString id = QString());
+    ApiReply *request(HttpOperation op, TacoTuesdayRequests requestType, QList<DomainObject *> (JsonParser::*jpMethod)(QString),
+                      QString id = QString());
 
     QString getApiUrl(QString extension);
     ApiRequest getBaseRequest(QString extension);
+
+    JsonParser *jp;
 
     QString apiKey;
     QString apiBaseUrl;

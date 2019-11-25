@@ -1,36 +1,43 @@
 #ifndef JSONPARSER_H
 #define JSONPARSER_H
 
+#include "domainobject.h"
+
 #include <QJsonObject>
 #include <QJsonDocument>
 
-#include "taco.h"
-#include "employee.h"
-#include "fullorder.h"
-#include "individualorder.h"
+class Taco;
+class Order;
+class IndividualOrder;
+class FullOrder;
+class Employee;
 
 class JsonParser
 {
 public:
-    JsonParser();
+    static JsonParser *Instance();
+
     QJsonObject parseObject(QString json);
     QJsonArray parseArray(QString json);
 
     Employee *parseEmployee(QJsonObject employeeObject);
-    QList<Employee *> parseEmployees(QString json);
+    QList<DomainObject *> parseEmployees(QString json);
 
-    Taco parseTaco(QJsonObject tacoObject);
-    QList<Taco> parseTacos(QString json);
+    Taco *parseTaco(QJsonObject tacoObject);
+    QList<DomainObject *> parseTacos(QString json);
 
     Order *parseOrder(QJsonObject orderObject);
 
     IndividualOrder *parseIndividualOrder(QJsonObject orderObject);
-    QList<IndividualOrder *> parseIndividualOrders(QString json);
+    QList<DomainObject *> parseIndividualOrders(QString json);
 
     FullOrder *parseFullOrder(QJsonObject orderObject);
-    QList<FullOrder *> parseFullOrders(QString json);
+    QList<DomainObject *> parseFullOrders(QString json);
 
 private:
+    JsonParser();
+    static JsonParser *instance;
+    TTLogger *logger;
     QJsonDocument getJsonDocument(QString json);
 };
 

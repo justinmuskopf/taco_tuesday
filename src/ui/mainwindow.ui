@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="managerTabs">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <property name="tabBarAutoHide">
        <bool>true</bool>
@@ -341,7 +341,17 @@
           <height>491</height>
          </rect>
         </property>
-        <layout class="QVBoxLayout" name="orderTabLayout"/>
+        <layout class="QVBoxLayout" name="orderTabLayout">
+         <item>
+          <widget class="TTOrderTree" name="orderTree">
+           <column>
+            <property name="text">
+             <string notr="true">1</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </widget>
      </widget>
@@ -412,6 +422,11 @@
    <class>CooldownBar</class>
    <extends>QProgressBar</extends>
    <header location="global">src/cooldownbar.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TTOrderTree</class>
+   <extends>QTreeWidget</extends>
+   <header location="global">src/ttordertree.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

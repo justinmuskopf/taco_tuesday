@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "jsonparser.h"
 #include "tacotuesdayapihandler.h"
 
 #include <QMainWindow>
@@ -32,6 +33,8 @@ private:
     const QString GENERAL_TAB = "general";
     const QString EMPLOYEE_TAB = "employee";
     const QString ORDER_TAB = "order";
+
+    JsonParser *jp;
 
     Ui::MainWindow *ui;
     QMap<QString, QWidget*> tabs;

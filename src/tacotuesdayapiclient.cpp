@@ -1,9 +1,12 @@
 #include "tacotuesdayapiclient.h"
 #include "tacotuesdayconfig.h"
 
+#include <QJsonDocument>
+#include <QNetworkReply>
 #include <QUrlQuery>
 
 TacoTuesdayApiClient *TacoTuesdayApiClient::instance = nullptr;
+int TacoTuesdayApiClient::transactionId = 1000;
 
 TacoTuesdayApiClient::TacoTuesdayApiClient(QObject *parent) : QNetworkAccessManager(parent)
 {
@@ -20,6 +23,8 @@ TacoTuesdayApiClient::TacoTuesdayApiClient(QObject *parent) : QNetworkAccessMana
         qDebug() << "Configuration signalled ApiBaseUrl has been updated: " << _apiBaseUrl;
         apiBaseUrl = _apiBaseUrl;
     });
+
+    jp = JsonParser::Instance();
 }
 
 TacoTuesdayApiClient *TacoTuesdayApiClient::Instance()
@@ -49,45 +54,42 @@ ApiRequest TacoTuesdayApiClient::getBaseRequest(QString extension)
     return QNetworkRequest(url);
 }
 
-ApiReply *TacoTuesdayApiClient::request(HttpOperation op, TacoTuesdayRequests requestType, QByteArray json, QString id)
+ApiReply *TacoTuesdayApiClient::request(HttpOperation op, TacoTuesdayRequests requestType, QList<DomainObject *> (JsonParser::*jpMethod)(QString),
+                                        QJsonObject json, QString id)
 {
+    int transactionId = nextTransactionId();
+
     QString path = TacoTuesdayPaths[requestType];
     if (id != nullptr && !id.isEmpty())
     {
         path = path.arg(id);
     }
 
-    QNetworkRequest r = getBaseRequest(path);
+    QNetworkRequest request = getBaseRequest(path);
+    QNetworkReply *reply;
 
     switch (op)
     {
     case GET:
-        return QNetworkAccessManager::get(r);
+        reply = QNetworkAccessManager::get(request);
+        break;
     case POST:
-        return QNetworkAccessManager::post(r, json);
+        reply = QNetworkAccessManager::post(request, QJsonDocument(json).toJson());
+        break;
     case PATCH:
-        return nullptr; // TODO
+        return 0; // TODO
     }
+
+    return new ApiReply(transactionId, reply, jpMethod);
 }
 
-ApiReply *TacoTuesdayApiClient::request(HttpOperation op, TacoTuesdayRequests requestType, QString id)
+ApiReply *TacoTuesdayApiClient::request(HttpOperation op, TacoTuesdayRequests requestType, QList<DomainObject *> (JsonParser::*jpMethod)(QString),
+                                        QString id)
 {
-    return request(op, requestType, nullptr, id);
+    return request(op, requestType, jpMethod, QJsonObject(), id);
 }
 
-ApiReply *TacoTuesdayApiClient::get(TacoTuesdayRequests requestType, QString id)
+int TacoTuesdayApiClient::nextTransactionId()
 {
-    return request(GET, requestType, id);
-}
-
-ApiReply *TacoTuesdayApiClient::post(TacoTuesdayRequests requestType, QByteArray json, QString id)
-{
-    return request(POST, requestType, json, id);
-}
-
-ApiReply *TacoTuesdayApiClient::patch(TacoTuesdayRequests requestType, QByteArray json, QString id)
-{
-    //QNetworkRequest r = getBaseRequest(TacoTuesdayPaths[requestType]);
-    //return QNetworkAccessManager::get(r);
-    return nullptr;
+    return ++transactionId;
 }

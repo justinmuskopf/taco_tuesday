@@ -2,10 +2,12 @@
 #define EMPLOYEE_H
 
 
+#include "domainobject.h"
+
 #include <QJsonObject>
 #include <QString>
 
-class Employee
+class Employee : public DomainObject
 {
 public:
     Employee();
@@ -24,7 +26,7 @@ public:
     bool isAdmin();
 
     QString toString();
-    QByteArray json();
+    QJsonObject serialize() override;
 private:
     QString fullName;
     QString nickName;

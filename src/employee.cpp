@@ -2,9 +2,9 @@
 #include <QDebug>
 #include <QJsonDocument>
 
-Employee::Employee() {}
+Employee::Employee() : DomainObject(DomainRealm::DOMAIN, "Employee") {}
 
-Employee::Employee(QString _fullName, QString _nickName, QString _slackId, bool _admin)
+Employee::Employee(QString _fullName, QString _nickName, QString _slackId, bool _admin) : Employee()
 {
     fullName = _fullName;
     slackId = _slackId;
@@ -35,7 +35,7 @@ QString Employee::toString()
     return s;
 }
 
-QByteArray Employee::json()
+QJsonObject Employee::serialize()
 {
     QJsonObject o;
     o["fullName"] = fullName;
@@ -43,5 +43,6 @@ QByteArray Employee::json()
     o["nickName"] = nickName;
     o["admin"] = admin;
 
-    return QJsonDocument(o).toJson();
+    return o;
 }
+

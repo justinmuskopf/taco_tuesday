@@ -56,23 +56,17 @@ void MainWindow::initEmployeeTab()
 
 void MainWindow::initTacos()
 {
-    QNetworkReply *r = apiHandler.getTacos();
-    connect(r, &QNetworkReply::finished, this, [=]{
-        qDebug() << r->readAll();
+    apiHandler.requestTacos();
+    connect(&apiHandler, &TacoTuesdayApiHandler::on_finished_getting_tacos, [=](QList<Taco> tacos){
+        qDebug() << tacos;
     });
 }
 
 void MainWindow::initEmployees()
 {
-    QNetworkReply *r = apiHandler.getEmployees();
-    connect(r, &QNetworkReply::finished, this, [=]{
-        if (r->error()) {
-            qDebug() << r->errorString();
-            return;
-        }
-
-        QList<Employee *> employees = JsonParser().parseEmployees(r->readAll());
-        ui->employeeTable->setEmployees(employees);
+    apiHandler.requestEmployees();
+    connect(&apiHandler, &TacoTuesdayApiHandler::on_finished_getting_employees, [=](QList<Employee *> employees){
+        ui->employeeTable->resetData(employees);
     });
 }
 
@@ -83,17 +77,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_employeeRefreshButton_clicked()
 {
-    ApiReply *r = apiHandler.getEmployees();
-    connect(r, &ApiReply::finished, this, [=]{
-        if (r->error())
-        {
-            qDebug() << r->errorString();
-            return;
-        }
-
-        QList<Employee *> employees = JsonParser().parseEmployees(r->readAll());
-        ui->employeeTable->resetData(employees);
-    });
+    apiHandler.requestEmployees();
 }
 
 void MainWindow::on_employeeSaveButton_clicked()

@@ -16,23 +16,30 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/apireply.cpp \
     src/configurationdialog.cpp \
     src/cooldownbar.cpp \
+    src/domainobject.cpp \
     src/employee.cpp \
     src/employeerow.cpp \
     src/employeetable.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
+    src/taco.cpp \
     src/tacotuesdayapiclient.cpp \
     src/tacotuesdayapihandler.cpp \
     src/tacotuesdayconfig.cpp \
     src/jsonparser.cpp \
     src/order.cpp \
     src/fullorder.cpp \
-    src/individualorder.cpp
+    src/individualorder.cpp \
+    src/ttlogger.cpp \
+    src/ttordertree.cpp
 
 HEADERS += \
+    src/apireply.h \
     src/cooldownbar.h \
+    src/domainobject.h \
     src/employee.h \
     src/employeerow.h \
     src/employeetable.h \
@@ -45,7 +52,9 @@ HEADERS += \
     src/tacotuesdayapihandler.h \
     src/mainwindow.h \
     src/configurationdialog.h \
-    src/tacotuesdayconfig.h
+    src/tacotuesdayconfig.h \
+    src/ttlogger.h \
+    src/ttordertree.h
 
 FORMS += \
     src/ui/configurationdialog.ui \

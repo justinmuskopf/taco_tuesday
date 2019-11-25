@@ -1,14 +1,16 @@
 #ifndef TACOTUESDAYAPIHANDLER_H
 #define TACOTUESDAYAPIHANDLER_H
 
-#include "employee.h"
-#include "taco.h"
+#include "jsonparser.h"
 #include "tacotuesdayapiclient.h"
 
 #include <QObject>
 #include <QNetworkAccessManager>
+#include <QNetworkReply>
 
-typedef QNetworkReply ApiReply;
+class Employee;
+class FullOrder;
+class Taco;
 
 class TacoTuesdayApiHandler : public QObject
 {
@@ -17,25 +19,29 @@ class TacoTuesdayApiHandler : public QObject
 public:
     explicit TacoTuesdayApiHandler();
 
-    ApiReply *getTacos();
-    ApiReply *getEmployees();
-    ApiReply *getEmployeeBySlackId(QString slackId);
-    ApiReply *getFullOrders();
-    ApiReply *getFullOrderById(QString id);
+    void requestTacos();
+    void requestEmployees();
+    void requestEmployeeBySlackId(QString slackId);
+    void requestFullOrders();
+    void requestFullOrderById(QString id);
 
-    ApiReply *updateEmployee(Employee *employee);
+    void updateEmployee(Employee *employee);
 
 signals:
     void on_request();
+    void on_finished_getting_employees(QList<Employee *> employees);
+    void on_finished_getting_employee_by_slack_id(Employee *employee);
+    void on_finished_getting_orders(QList<FullOrder *> orders);
+    void on_finished_getting_tacos(QList<Taco> tacos);
 
+    void on_finished_updating_employee(int transId, Employee *employee);
 private:
     typedef TacoTuesdayApiClient::TacoTuesdayRequests TTRequests;
     typedef TacoTuesdayApiClient::HttpOperation TTOperations;
 
-    ApiReply *request(TTRequests requestType, TTOperations operation, QByteArray json="", QString id="");
+    ApiReply *request(TTRequests requestType, TTOperations operation, QList<DomainObject *> (JsonParser::*jpMethod)(QString), QJsonObject json = QJsonObject());
 
     static TacoTuesdayApiClient *WebClient;
-    static QList<Taco> tacos;
 };
 
 #endif // TACOTUESDAYAPIHANDLER_H

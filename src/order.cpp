@@ -1,36 +1,63 @@
 #include "jsonparser.h"
 #include "order.h"
 #include "tacotuesdayapihandler.h"
+#include "ttlogger.h"
 
 #include <QNetworkReply>
 
-QList<Taco> Order::Tacos;
+TacoPriceMap Order::TacoPrices;
 
-Order::Order() : QObject(nullptr)
+Order::Order() : QObject(nullptr), DomainObject(DomainRealm::DOMAIN, "Order")
 {
-    if (Tacos.isEmpty())
+    if (TacoPrices.isEmpty())
     {
         TacoTuesdayApiHandler handler;
-        ApiReply *reply = handler.getTacos();
-        connect(reply, &ApiReply::finished, this, [=]{
-            Tacos = JsonParser().parseTacos(reply->readAll());
+        handler.requestTacos();
+        connect(&handler, &TacoTuesdayApiHandler::on_finished_getting_tacos, [=](QList<Taco> tacos){
+            foreach (Taco taco, tacos)
+            {
+                TacoPrices[taco.getType()] = taco.getPrice();
+            }
         });
     }
 }
 
-void Order::initTacoCounts()
+Order::Order(Order *order) : Order()
 {
-    foreach (Taco taco, Tacos)
-    {
-        tacoCounts[taco.type] = 0;
-    }
+    tacosInOrder = order->tacosInOrder;
 }
 
 float Order::price(float pastorPrice)
 {
     float total = 0;
-    foreach (Taco taco, Tacos)
+    foreach (TacoType ttype, tacosInOrder.keys())
     {
-        total += taco.type == "PASTOR" ? tacoCounts[taco.type] * pastorPrice : tacoCounts[taco.type] * taco.price;
+        int numTacosInOrder = tacosInOrder[ttype];
+        if (numTacosInOrder == 0) continue;
+
+        total += Taco::isPastor(ttype) ? numTacosInOrder * pastorPrice : numTacosInOrder * TacoPrices[ttype];
     }
+
+    return total;
 }
+
+OrderedTacoMap Order::getTacoCounts()
+{
+    return tacosInOrder;
+}
+
+void Order::addTacos(QString tacoType, int count)
+{
+    if (!TacoPrices.contains(tacoType))
+    {
+        logger->warning("Wrong taco type provided to order: " + tacoType + "!");
+    }
+
+    if (!tacosInOrder.contains(tacoType))
+    {
+        tacosInOrder[tacoType] = 0;
+    }
+
+    tacosInOrder[tacoType] += count;
+}
+
