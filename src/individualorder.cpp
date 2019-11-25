@@ -1,6 +1,6 @@
 #include "individualorder.h"
 
-IndividualOrder::IndividualOrder() : Order()
+IndividualOrder::IndividualOrder(Employee *employee) : Order()
 {
-
+    this->employee = employee;
 }

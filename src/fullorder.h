@@ -16,8 +16,10 @@ public:
     void updateOrder(IndividualOrder *order);
 
     QJsonObject serialize() override;
+
+    friend FullOrder *JsonParser::parseFullOrder(QJsonObject object);
 private:
-    QMap<QString, IndividualOrder *> individualOrders;
+    QList<IndividualOrder *> individualOrders;
 private slots:
     void on_order_updated(IndividualOrder *);
 };

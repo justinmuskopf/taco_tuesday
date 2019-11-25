@@ -8,6 +8,17 @@
 #include "fullorder.h"
 
 TacoTuesdayApiClient *TacoTuesdayApiHandler::WebClient = TacoTuesdayApiClient::Instance();
+TacoTuesdayApiHandler *TacoTuesdayApiHandler::instance = nullptr;
+
+TacoTuesdayApiHandler *TacoTuesdayApiHandler::Instance()
+{
+    if (instance == nullptr)
+    {
+        instance = new TacoTuesdayApiHandler();
+    }
+
+    return instance;
+}
 
 TacoTuesdayApiHandler::TacoTuesdayApiHandler()
 {
@@ -26,6 +37,7 @@ void TacoTuesdayApiHandler::requestTacos()
 {
     ApiReply *r = request(TTRequests::TACOS, TTOperations::GET, &JsonParser::parseTacos);
     connect(r, &ApiReply::finished, [=](int transId, QList<DomainObject *> objects){
+        qDebug() << "Here I am, something about tacos";
         QList<Taco *> tacos;
         foreach (DomainObject *o, objects) tacos.append(static_cast<Taco *>(o));
         emit on_finished_getting_tacos(tacos);

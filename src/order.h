@@ -19,6 +19,8 @@ class Order : public QObject, public DomainObject
 {
     Q_OBJECT
 public:
+    static void initTacos();
+
     Order();
     Order(Order *);
 
@@ -33,9 +35,12 @@ public:
 signals:
     void updated(Order *order);
 private:
+    bool requestedTacos = false;
     static TacoPriceMap TacoPrices;
+    void setCreatedAt(QString dateString);
 protected:
     OrderedTacoMap tacosInOrder;
+    QDateTime createdAt;
 };
 
 #endif // ORDER_H

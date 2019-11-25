@@ -17,7 +17,7 @@ class TacoTuesdayApiHandler : public QObject
     Q_OBJECT
 
 public:
-    explicit TacoTuesdayApiHandler();
+    static TacoTuesdayApiHandler *Instance();
 
     void requestTacos();
     void requestEmployees();
@@ -36,6 +36,9 @@ signals:
 
     void on_finished_updating_employee(int transId, Employee *employee);
 private:
+    TacoTuesdayApiHandler();
+    static TacoTuesdayApiHandler *instance;
+
     typedef TacoTuesdayApiClient::TacoTuesdayRequests TTRequests;
     typedef TacoTuesdayApiClient::HttpOperation TTOperations;
 

@@ -4,27 +4,32 @@
 #include "ttlogger.h"
 
 #include <QNetworkReply>
+#include <QDebug>
 
 TacoPriceMap Order::TacoPrices;
 
 Order::Order() : QObject(nullptr), DomainObject(DomainRealm::DOMAIN, "Order")
 {
-    if (TacoPrices.isEmpty())
-    {
-        TacoTuesdayApiHandler handler;
-        handler.requestTacos();
-        connect(&handler, &TacoTuesdayApiHandler::on_finished_getting_tacos, [=](QList<Taco *> tacos){
-            foreach (Taco *taco, tacos)
-            {
-                TacoPrices[taco->getType()] = taco->getPrice();
-            }
-        });
-    }
 }
 
 Order::Order(Order *order) : Order()
 {
     tacosInOrder = order->tacosInOrder;
+}
+
+void Order::initTacos()
+{
+    TacoTuesdayApiHandler *ttapihandler = TacoTuesdayApiHandler::Instance();
+    connect(ttapihandler, &TacoTuesdayApiHandler::on_finished_getting_tacos, [=](QList<Taco *> tacos){
+        qDebug() << "Finished getting tacos!";
+        foreach (Taco *taco, tacos)
+        {
+            qDebug() << taco->getType() << taco->getPrice();
+            TacoPrices[taco->getType()] = taco->getPrice();
+        }
+
+        ttapihandler->deleteLater();
+    });
 }
 
 float Order::price(float pastorPrice)
@@ -53,6 +58,7 @@ void Order::addTacos(QString tacoType, int count)
         return logger->warning("Wrong taco type provided to order: " + tacoType + "!");
     }
 
+
     if (!tacosInOrder.contains(tacoType))
     {
         tacosInOrder[tacoType] = 0;
@@ -73,6 +79,12 @@ QJsonObject Order::serialize(float pastorPrice)
 
     return o;
 }
+
+void Order::setCreatedAt(QString dateString)
+{
+    createdAt = QDateTime::fromString(dateString);
+}
+
 
 QJsonObject Order::serialize() { return serialize(TacoPrices[Taco::PastorType]); }
 

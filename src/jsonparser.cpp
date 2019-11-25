@@ -123,20 +123,29 @@ QList<DomainObject *> JsonParser::parseTacos(QString json)
 
 Order *JsonParser::parseOrder(QJsonObject orderObject)
 {
-    Order *order = new IndividualOrder();
+    qDebug() << "Parsing employee";
+    Employee *employee = parseEmployee(orderObject["employee"].toObject());
+    qDebug() << "success employee parse?";
+
+    Order *order = new IndividualOrder(employee);
+    qDebug() << "complet ordur?";
 
     TacoPriceMap tacoPrices = Order::TacoPrices;
     foreach (TacoType ttype, tacoPrices.keys())
     {
-        if (!orderObject.contains(ttype)) continue;
+        qDebug() << ttype;
+        qDebug() << ("Adding " + QString::number(orderObject[ttype].toInt()));
         order->addTacos(ttype, orderObject[ttype].toInt());
     }
+
+    order->setCreatedAt(orderObject["createdAt"].toString());
 
     return order;
 }
 
 IndividualOrder *JsonParser::parseIndividualOrder(QJsonObject orderObject)
 {
+    qDebug() << "indiv." << orderObject;
     return static_cast<IndividualOrder *>(parseOrder(orderObject));
 }
 
@@ -155,16 +164,22 @@ QList<DomainObject *> JsonParser::parseIndividualOrders(QString json)
 
 FullOrder *JsonParser::parseFullOrder(QJsonObject orderObject)
 {
-    Order *order = parseOrder(orderObject);
-    FullOrder *fullOrder = new FullOrder(order);
+    FullOrder *fullOrder = new FullOrder();
 
-
+    OrderedTacoMap tacos;
+    foreach (QJsonValue v, orderObject["individualOrders"].toArray())
+    {
+        QJsonObject o = v.toObject();
+        qDebug() << "parsing" << o;
+        fullOrder->addOrder(parseIndividualOrder(o));
+    }
 
     return fullOrder;
 }
 
 QList<DomainObject *> JsonParser::parseFullOrders(QString json)
 {
+    //qDebug() << "Parsing" << json;
     QJsonArray ordersJson = parseArray(json);
 
     QList<DomainObject *> orders;

@@ -6,9 +6,10 @@
 class IndividualOrder : public Order
 {
 public:
-    IndividualOrder();
+    IndividualOrder(Employee *employee);
 private slots:
     void updated(IndividualOrder *order);
+    Employee *employee;
 };
 
 #endif // INDIVIDUALORDER_H

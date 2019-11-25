@@ -41,7 +41,7 @@ private:
     QTimer *cooldownTimer;
     QList<QPushButton *> requestButtons;
 
-    TacoTuesdayApiHandler apiHandler;
+    TacoTuesdayApiHandler *apiHandler;
     int progress = 0;
     int cooldownMs = 2000;
     int steps = 10;
@@ -55,6 +55,7 @@ private:
 
     void initTacos();
     void initEmployees();
+    void initOrders();
 
     QList<Taco> tacos;
 };

@@ -1,6 +1,7 @@
 #include "ui_mainwindow.h"
 #include "QPushButton"
 #include "order.h"
+#include "fullorder.h"
 #include "configurationdialog.h"
 
 #include <QNetworkReply>
@@ -12,6 +13,8 @@
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
+    apiHandler = TacoTuesdayApiHandler::Instance();
+
     ui->setupUi(this);
     initTabs();
 
@@ -20,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     requestButtons.append(ui->generalRefreshButton);
 
     ui->requestCooldownBar->setValue(0);
-    connect(&apiHandler, &TacoTuesdayApiHandler::on_request, this, &MainWindow::on_coolDown_triggered);
+    connect(apiHandler, &TacoTuesdayApiHandler::on_request, this, &MainWindow::on_coolDown_triggered);
     connect(ui->requestCooldownBar, &CooldownBar::cooled, this, &MainWindow::enableRequestButtons);
 }
 
@@ -44,6 +47,7 @@ void MainWindow::initOrderTab()
     tabs.insert(ORDER_TAB, ui->orderTab);
 
     initTacos();
+    initOrders();
 }
 
 void MainWindow::initEmployeeTab()
@@ -56,20 +60,31 @@ void MainWindow::initEmployeeTab()
 
 void MainWindow::initTacos()
 {
-    connect(&apiHandler, &TacoTuesdayApiHandler::on_finished_getting_tacos, [=](QList<Taco *> tacos){
+    Order::initTacos();
+
+    connect(apiHandler, &TacoTuesdayApiHandler::on_finished_getting_tacos, [=](QList<Taco *> tacos){
         qDebug() << tacos;
     });
 
-    apiHandler.requestTacos();
+    apiHandler->requestTacos();
 }
 
 void MainWindow::initEmployees()
 {
-    connect(&apiHandler, &TacoTuesdayApiHandler::on_finished_getting_employees, [=](QList<Employee *> employees){
+    connect(apiHandler, &TacoTuesdayApiHandler::on_finished_getting_employees, [=](QList<Employee *> employees){
         ui->employeeTable->resetData(employees);
     });
 
-    apiHandler.requestEmployees();
+    apiHandler->requestEmployees();
+}
+
+void MainWindow::initOrders()
+{
+    connect(apiHandler, &TacoTuesdayApiHandler::on_finished_getting_orders, [=](QList<FullOrder *> orders){
+       ui->orderTree->setOrders(orders);
+    });
+
+    apiHandler->requestFullOrders();
 }
 
 MainWindow::~MainWindow()
@@ -79,7 +94,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_employeeRefreshButton_clicked()
 {
-    apiHandler.requestEmployees();
+    apiHandler->requestEmployees();
 }
 
 void MainWindow::on_employeeSaveButton_clicked()
@@ -87,7 +102,7 @@ void MainWindow::on_employeeSaveButton_clicked()
     QList<Employee *> employees = ui->employeeTable->save();
     foreach (Employee *employee, employees)
     {
-        apiHandler.updateEmployee(employee);
+        apiHandler->updateEmployee(employee);
     }
 }
 

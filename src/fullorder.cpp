@@ -25,3 +25,15 @@ QJsonObject FullOrder::serialize()
 
     return o;
 }
+
+void FullOrder::addOrder(IndividualOrder *order)
+{
+    OrderedTacoMap tacoMap = order->getTacoCounts();
+
+    foreach (QString ttype, tacoMap.keys())
+    {
+        addTacos(ttype, tacoMap[ttype]);
+    }
+
+    individualOrders.append(order);
+}
