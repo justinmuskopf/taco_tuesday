@@ -80,11 +80,15 @@ void MainWindow::initEmployees()
 
 void MainWindow::initOrders()
 {
+    Order::initTacos();
+
     connect(apiHandler, &TacoTuesdayApiHandler::on_finished_getting_orders, [=](QList<FullOrder *> orders){
        ui->orderTree->setOrders(orders);
     });
 
-    apiHandler->requestFullOrders();
+    connect(apiHandler, &TacoTuesdayApiHandler::on_finished_getting_tacos, [=](QList<Taco *> tacos){
+        apiHandler->requestFullOrders();
+    });
 }
 
 MainWindow::~MainWindow()
@@ -133,4 +137,9 @@ void MainWindow::on_coolDown_triggered()
 {
     disableRequestButtons();
     ui->requestCooldownBar->beginCoolingSequence();
+}
+
+void MainWindow::on_generalRefreshButton_clicked()
+{
+    apiHandler->refresh();
 }

@@ -39,8 +39,6 @@ void CooldownBar::incrementProgessBar()
 {
     int progress = value() + msPerStep;
 
-    qDebug() << progress << "/" << cooldownMs;
-
     if (progress <= cooldownMs)
     {
         setValue(progress);

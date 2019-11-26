@@ -24,15 +24,18 @@ public:
     void requestEmployeeBySlackId(QString slackId);
     void requestFullOrders();
     void requestFullOrderById(QString id);
+    void requestApiStatusCheck();
 
     void updateEmployee(Employee *employee);
 
+    void refresh();
 signals:
     void on_request();
     void on_finished_getting_employees(QList<Employee *> employees);
     void on_finished_getting_employee_by_slack_id(Employee *employee);
     void on_finished_getting_orders(QList<FullOrder *> orders);
     void on_finished_getting_tacos(QList<Taco *> tacos);
+    void on_finished_pinging_api(bool apiIsUp);
 
     void on_finished_updating_employee(int transId, Employee *employee);
 private:

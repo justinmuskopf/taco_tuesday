@@ -123,18 +123,12 @@ QList<DomainObject *> JsonParser::parseTacos(QString json)
 
 Order *JsonParser::parseOrder(QJsonObject orderObject)
 {
-    qDebug() << "Parsing employee";
     Employee *employee = parseEmployee(orderObject["employee"].toObject());
-    qDebug() << "success employee parse?";
-
     Order *order = new IndividualOrder(employee);
-    qDebug() << "complet ordur?";
 
     TacoPriceMap tacoPrices = Order::TacoPrices;
     foreach (TacoType ttype, tacoPrices.keys())
     {
-        qDebug() << ttype;
-        qDebug() << ("Adding " + QString::number(orderObject[ttype].toInt()));
         order->addTacos(ttype, orderObject[ttype].toInt());
     }
 
@@ -145,7 +139,6 @@ Order *JsonParser::parseOrder(QJsonObject orderObject)
 
 IndividualOrder *JsonParser::parseIndividualOrder(QJsonObject orderObject)
 {
-    qDebug() << "indiv." << orderObject;
     return static_cast<IndividualOrder *>(parseOrder(orderObject));
 }
 
@@ -170,7 +163,6 @@ FullOrder *JsonParser::parseFullOrder(QJsonObject orderObject)
     foreach (QJsonValue v, orderObject["individualOrders"].toArray())
     {
         QJsonObject o = v.toObject();
-        qDebug() << "parsing" << o;
         fullOrder->addOrder(parseIndividualOrder(o));
     }
 
@@ -179,7 +171,6 @@ FullOrder *JsonParser::parseFullOrder(QJsonObject orderObject)
 
 QList<DomainObject *> JsonParser::parseFullOrders(QString json)
 {
-    //qDebug() << "Parsing" << json;
     QJsonArray ordersJson = parseArray(json);
 
     QList<DomainObject *> orders;
@@ -189,4 +180,10 @@ QList<DomainObject *> JsonParser::parseFullOrders(QString json)
     }
 
     return orders;
+}
+
+bool JsonParser::parseApiStatus(QString json)
+{
+    QJsonObject o = parseObject(json);
+    return o["status"].toString() == "UP";
 }

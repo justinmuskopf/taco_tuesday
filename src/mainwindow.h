@@ -29,6 +29,8 @@ private slots:
     void enableRequestButtons();
     void disableRequestButtons();
 
+    void on_generalRefreshButton_clicked();
+
 private:
     const QString GENERAL_TAB = "general";
     const QString EMPLOYEE_TAB = "employee";

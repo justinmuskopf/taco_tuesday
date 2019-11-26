@@ -54,6 +54,7 @@ private:
                       QJsonObject json = QJsonObject(), QString id = QString());
     ApiReply *request(HttpOperation op, TacoTuesdayRequests requestType, QList<DomainObject *> (JsonParser::*jpMethod)(QString),
                       QString id = QString());
+    QNetworkReply *raw_get(QString fullPath);
 
     QString getApiUrl(QString extension);
     ApiRequest getBaseRequest(QString extension);
@@ -62,6 +63,7 @@ private:
 
     QString apiKey;
     QString apiBaseUrl;
+    QString apiUrlNoPath;
 
     const QStringList TacoTuesdayPaths
     {
@@ -71,7 +73,7 @@ private:
         "/orders/full",
         "/orders/full/%1",
         "/orders/individual",
-        "/orders/individual/%1",
+        "/orders/individual/%1"
     };
 };
 

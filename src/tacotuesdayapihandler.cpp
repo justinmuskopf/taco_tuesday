@@ -22,7 +22,15 @@ TacoTuesdayApiHandler *TacoTuesdayApiHandler::Instance()
 
 TacoTuesdayApiHandler::TacoTuesdayApiHandler()
 {
+    refresh();
+}
 
+void TacoTuesdayApiHandler::refresh()
+{
+//    requestTacos();
+//    requestEmployees();
+//    requestFullOrders();
+//    requestApiStatusCheck();
 }
 
 ApiReply *TacoTuesdayApiHandler::request(TTRequests requestType, TTOperations operation, QList<DomainObject *> (JsonParser::*jpMethod)(QString),
@@ -37,7 +45,6 @@ void TacoTuesdayApiHandler::requestTacos()
 {
     ApiReply *r = request(TTRequests::TACOS, TTOperations::GET, &JsonParser::parseTacos);
     connect(r, &ApiReply::finished, [=](int transId, QList<DomainObject *> objects){
-        qDebug() << "Here I am, something about tacos";
         QList<Taco *> tacos;
         foreach (DomainObject *o, objects) tacos.append(static_cast<Taco *>(o));
         emit on_finished_getting_tacos(tacos);
@@ -72,6 +79,20 @@ void TacoTuesdayApiHandler::requestFullOrders()
 
 void TacoTuesdayApiHandler::updateEmployee(Employee *employee)
 {
-    qDebug() << employee->serialize();
-    //return nullptr;//WebClient->put
+    ApiReply *r = request(TTRequests::EMPLOYEES, TTOperations::PATCH, &JsonParser::parseEmployees);
+    connect(r, &ApiReply::finished, [=](int transId, QList<DomainObject *> objects){
+        QList<Employee *> employees;
+
+        r->deleteLater();
+    });
 }
+
+void TacoTuesdayApiHandler::requestApiStatusCheck()
+{
+    QNetworkReply *r = WebClient->raw_get("/actuator/health");
+    connect(r, &QNetworkReply::finished, [=]{
+       bool apiIsUp = JsonParser::Instance()->parseApiStatus(r->readAll());
+       emit on_finished_pinging_api(apiIsUp);
+    });
+}
+

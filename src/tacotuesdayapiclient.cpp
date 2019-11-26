@@ -1,6 +1,7 @@
 #include "tacotuesdayapiclient.h"
 #include "tacotuesdayconfig.h"
 
+#include <QBuffer>
 #include <QJsonDocument>
 #include <QNetworkReply>
 #include <QUrlQuery>
@@ -22,6 +23,9 @@ TacoTuesdayApiClient::TacoTuesdayApiClient(QObject *parent) : QNetworkAccessMana
     connect(config, &TacoTuesdayConfig::on_apiBaseUrl_changed, [=](QString _apiBaseUrl){
         qDebug() << "Configuration signalled ApiBaseUrl has been updated: " << _apiBaseUrl;
         apiBaseUrl = _apiBaseUrl;
+
+        if (apiBaseUrl.contains('/'))
+            apiUrlNoPath = apiBaseUrl.left(apiBaseUrl.indexOf('/'));
     });
 
     jp = JsonParser::Instance();
@@ -54,6 +58,18 @@ ApiRequest TacoTuesdayApiClient::getBaseRequest(QString extension)
     return QNetworkRequest(url);
 }
 
+QNetworkReply *TacoTuesdayApiClient::patch(QNetworkRequest r, QByteArray json)
+{
+    r.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    QBuffer *buffer= new QBuffer();
+    buffer->open((QBuffer::ReadWrite));
+    buffer->write(json);
+    buffer->seek(0);
+
+    return sendCustomRequest(r, "PATCH", buffer);
+}
+
 ApiReply *TacoTuesdayApiClient::request(HttpOperation op, TacoTuesdayRequests requestType, QList<DomainObject *> (JsonParser::*jpMethod)(QString),
                                         QJsonObject json, QString id)
 {
@@ -77,7 +93,8 @@ ApiReply *TacoTuesdayApiClient::request(HttpOperation op, TacoTuesdayRequests re
         reply = QNetworkAccessManager::post(request, QJsonDocument(json).toJson());
         break;
     case PATCH:
-        return 0; // TODO
+        reply = patch(request, QJsonDocument(json).toJson()); // TODO
+        break;
     }
 
     return new ApiReply(transactionId, reply, jpMethod);
@@ -87,6 +104,21 @@ ApiReply *TacoTuesdayApiClient::request(HttpOperation op, TacoTuesdayRequests re
                                         QString id)
 {
     return request(op, requestType, jpMethod, QJsonObject(), id);
+}
+
+QNetworkReply *TacoTuesdayApiClient::raw_get(QString fullPath)
+{
+    QString apiUrlNoPath = fullPath.left(fullPath.indexOf('/'));
+    QUrl url(apiUrlNoPath + "/" + fullPath);
+
+    QUrlQuery query;
+    query.addQueryItem("apiKey", apiKey);
+
+    url.setQuery(query);
+
+    QNetworkRequest r(url);
+
+    return QNetworkAccessManager::get(r);
 }
 
 int TacoTuesdayApiClient::nextTransactionId()

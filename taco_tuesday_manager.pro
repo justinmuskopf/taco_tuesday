@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     src/apireply.cpp \
+    src/apirequestqueue.cpp \
     src/configurationdialog.cpp \
     src/cooldownbar.cpp \
     src/domainobject.cpp \
@@ -26,6 +27,7 @@ SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
     src/taco.cpp \
+    src/tacotable.cpp \
     src/tacotuesdayapiclient.cpp \
     src/tacotuesdayapihandler.cpp \
     src/tacotuesdayconfig.cpp \
@@ -38,6 +40,7 @@ SOURCES += \
 
 HEADERS += \
     src/apireply.h \
+    src/apirequestqueue.h \
     src/cooldownbar.h \
     src/domainobject.h \
     src/employee.h \
@@ -48,6 +51,7 @@ HEADERS += \
     src/fullorder.h \
     src/individualorder.h \
     src/taco.h \
+    src/tacotable.h \
     src/tacotuesdayapiclient.h \
     src/tacotuesdayapihandler.h \
     src/mainwindow.h \

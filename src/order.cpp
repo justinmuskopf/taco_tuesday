@@ -19,16 +19,11 @@ Order::Order(Order *order) : Order()
 
 void Order::initTacos()
 {
-    TacoTuesdayApiHandler *ttapihandler = TacoTuesdayApiHandler::Instance();
-    connect(ttapihandler, &TacoTuesdayApiHandler::on_finished_getting_tacos, [=](QList<Taco *> tacos){
-        qDebug() << "Finished getting tacos!";
+    connect(TacoTuesdayApiHandler::Instance(), &TacoTuesdayApiHandler::on_finished_getting_tacos, [=](QList<Taco *> tacos){
         foreach (Taco *taco, tacos)
         {
-            qDebug() << taco->getType() << taco->getPrice();
             TacoPrices[taco->getType()] = taco->getPrice();
         }
-
-        ttapihandler->deleteLater();
     });
 }
 

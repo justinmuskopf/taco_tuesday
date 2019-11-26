@@ -34,6 +34,8 @@ public:
     FullOrder *parseFullOrder(QJsonObject orderObject);
     QList<DomainObject *> parseFullOrders(QString json);
 
+    bool parseApiStatus(QString json);
+
 private:
     JsonParser();
     static JsonParser *instance;
