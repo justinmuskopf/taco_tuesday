@@ -23,6 +23,11 @@ CooldownBar::CooldownBar(QWidget *parent) : QProgressBar(parent)
 
 void CooldownBar::beginCoolingSequence()
 {
+    if (alreadyCooling)
+        return;
+
+    alreadyCooling = true;
+
     setRange(0, cooldownMs);
     setValue(0);
 
@@ -51,5 +56,12 @@ void CooldownBar::incrementProgessBar()
         delete timer;
 
         emit cooled();
+
+        alreadyCooling = false;
     }
+}
+
+bool CooldownBar::cooling()
+{
+    return alreadyCooling;
 }

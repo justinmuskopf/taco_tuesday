@@ -50,8 +50,10 @@ private:
         INDIVIDUAL_ORDER_BY_ID
     };
 
+    QNetworkReply *patch(QNetworkRequest r, QByteArray json);
+
     ApiReply *request(HttpOperation op, TacoTuesdayRequests requestType, QList<DomainObject *> (JsonParser::*jpMethod)(QString),
-                      QJsonObject json = QJsonObject(), QString id = QString());
+                      QByteArray json = QByteArray(), QString id = QString());
     ApiReply *request(HttpOperation op, TacoTuesdayRequests requestType, QList<DomainObject *> (JsonParser::*jpMethod)(QString),
                       QString id = QString());
     QNetworkReply *raw_get(QString fullPath);

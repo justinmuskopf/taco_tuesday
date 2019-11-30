@@ -10,6 +10,6 @@ void TTOrderTree::setOrders(QList<FullOrder *> orders)
 {
     foreach(FullOrder *order, orders)
     {
-        qDebug() << order->price(1.50);
+        qDebug() << "Full Order: " << order->getId();
     }
 }

@@ -15,6 +15,7 @@ public:
 
     void addEmployee(Employee *employee);
     void setEmployees(QList<Employee *> employees);
+    void updateEmployees(QList<Employee *> employees);
     void resetData(QList<Employee *> employees);
 
     QList<Employee *> save();

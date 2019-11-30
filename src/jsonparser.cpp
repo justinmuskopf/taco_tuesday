@@ -132,6 +132,7 @@ Order *JsonParser::parseOrder(QJsonObject orderObject)
         order->addTacos(ttype, orderObject[ttype].toInt());
     }
 
+    order->setId(orderObject["id"].toInt());
     order->setCreatedAt(orderObject["createdAt"].toString());
 
     return order;
@@ -165,6 +166,8 @@ FullOrder *JsonParser::parseFullOrder(QJsonObject orderObject)
         QJsonObject o = v.toObject();
         fullOrder->addOrder(parseIndividualOrder(o));
     }
+
+    fullOrder->setId(orderObject["id"].toInt());
 
     return fullOrder;
 }

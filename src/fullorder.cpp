@@ -37,3 +37,8 @@ void FullOrder::addOrder(IndividualOrder *order)
 
     individualOrders.append(order);
 }
+
+QList<IndividualOrder *> FullOrder::getIndividualOrders()
+{
+    return individualOrders;
+}

@@ -71,7 +71,7 @@ QNetworkReply *TacoTuesdayApiClient::patch(QNetworkRequest r, QByteArray json)
 }
 
 ApiReply *TacoTuesdayApiClient::request(HttpOperation op, TacoTuesdayRequests requestType, QList<DomainObject *> (JsonParser::*jpMethod)(QString),
-                                        QJsonObject json, QString id)
+                                        QByteArray json, QString id)
 {
     int transactionId = nextTransactionId();
 
@@ -87,13 +87,13 @@ ApiReply *TacoTuesdayApiClient::request(HttpOperation op, TacoTuesdayRequests re
     switch (op)
     {
     case GET:
-        reply = QNetworkAccessManager::get(request);
+        reply = get(request);
         break;
     case POST:
-        reply = QNetworkAccessManager::post(request, QJsonDocument(json).toJson());
+        reply = post(request, json);
         break;
     case PATCH:
-        reply = patch(request, QJsonDocument(json).toJson()); // TODO
+        reply = patch(request, json);
         break;
     }
 
@@ -103,7 +103,7 @@ ApiReply *TacoTuesdayApiClient::request(HttpOperation op, TacoTuesdayRequests re
 ApiReply *TacoTuesdayApiClient::request(HttpOperation op, TacoTuesdayRequests requestType, QList<DomainObject *> (JsonParser::*jpMethod)(QString),
                                         QString id)
 {
-    return request(op, requestType, jpMethod, QJsonObject(), id);
+    return request(op, requestType, jpMethod, QByteArray(), id);
 }
 
 QNetworkReply *TacoTuesdayApiClient::raw_get(QString fullPath)

@@ -16,6 +16,7 @@ public:
 
     bool error();
     QString errorString();
+    QString json();
 signals:
     void finished(int id, QList<DomainObject *>);
 
@@ -24,6 +25,7 @@ private:
     static TTLogger *logger;
     QNetworkReply *reply;
     DomainList (JsonParser::*jpMethod)(QString);
+    QString jsonString = "";
 private slots:
     void on_reply_finished();
 };

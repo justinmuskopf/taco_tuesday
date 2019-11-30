@@ -27,6 +27,10 @@ void Order::initTacos()
     });
 }
 
+int Order::getId()
+{
+    return id;
+}
 float Order::price(float pastorPrice)
 {
     float total = 0;
@@ -39,6 +43,11 @@ float Order::price(float pastorPrice)
     }
 
     return total;
+}
+
+void Order::setId(int _id)
+{
+    id = _id;
 }
 
 OrderedTacoMap Order::getTacoCounts()
@@ -65,6 +74,7 @@ void Order::addTacos(QString tacoType, int count)
 QJsonObject Order::serialize(float pastorPrice)
 {
     QJsonObject o;
+    o["id"] = id;
     foreach (QString tacoType, tacosInOrder.keys())
     {
         o[tacoType] = tacosInOrder[tacoType];

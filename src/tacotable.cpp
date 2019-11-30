@@ -21,11 +21,14 @@ void TacoTable::addTaco(Taco *taco)
     qDebug() << "Adding taco.." << taco->getName() << taco->getType();
     if (hasTaco(taco))
     {
+        qDebug() << "Already have!";
         TTableRow row = tacos[taco->getType()];
         row.second->setText(QString::number(taco->getPrice()));
     }
     else
     {
+        qDebug() << "Do not have!!";
+
         int rowNum = rowCount();
         insertRow(rowNum);
 
@@ -39,7 +42,7 @@ void TacoTable::addTaco(Taco *taco)
 
 void TacoTable::setTacos(QList<Taco *> tacos)
 {
-    clear();
+    //clear();
     foreach (Taco *taco, tacos)
     {
         addTaco(taco);

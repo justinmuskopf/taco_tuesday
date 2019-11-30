@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QUrlQuery>
 #include <QObject>
+#include <QJsonArray>
 
 #include "tacotuesdayapihandler.h"
 #include "employee.h"
@@ -27,10 +28,10 @@ TacoTuesdayApiHandler::TacoTuesdayApiHandler()
 
 void TacoTuesdayApiHandler::refresh()
 {
-//    requestTacos();
-//    requestEmployees();
-//    requestFullOrders();
-//    requestApiStatusCheck();
+    requestTacos();
+    requestEmployees();
+    requestFullOrders();
+    requestApiStatusCheck();
 }
 
 ApiReply *TacoTuesdayApiHandler::request(TTRequests requestType, TTOperations operation, QList<DomainObject *> (JsonParser::*jpMethod)(QString),
@@ -38,7 +39,7 @@ ApiReply *TacoTuesdayApiHandler::request(TTRequests requestType, TTOperations op
 {
     emit on_request();
 
-    return WebClient->request(operation, requestType, jpMethod, json);
+    return WebClient->request(operation, requestType, jpMethod, QJsonDocument(json).toJson());
 }
 
 void TacoTuesdayApiHandler::requestTacos()
@@ -69,6 +70,7 @@ void TacoTuesdayApiHandler::requestFullOrders()
 {
     ApiReply *r = request(TTRequests::FULL_ORDERS, TTOperations::GET, &JsonParser::parseFullOrders);
     connect(r, &ApiReply::finished, [=](int transId, QList<DomainObject *> objects){
+
         QList<FullOrder *> fullOrders;
         foreach (DomainObject *o, objects) fullOrders.append(static_cast<FullOrder *>(o));
         emit on_finished_getting_orders(fullOrders);
@@ -77,11 +79,21 @@ void TacoTuesdayApiHandler::requestFullOrders()
     });
 }
 
-void TacoTuesdayApiHandler::updateEmployee(Employee *employee)
+void TacoTuesdayApiHandler::updateEmployees(QList<Employee *> employees)
 {
-    ApiReply *r = request(TTRequests::EMPLOYEES, TTOperations::PATCH, &JsonParser::parseEmployees);
+    QJsonArray jsonObjects;
+    foreach (Employee *employee, employees)
+    {
+        qDebug() << "Adding employee to update list:" << employee;
+        jsonObjects.append(employee->serialize());
+    }
+
+    ApiReply *r = WebClient->request(TTOperations::PATCH, TTRequests::EMPLOYEES, &JsonParser::parseEmployees, QJsonDocument(jsonObjects).toJson());
     connect(r, &ApiReply::finished, [=](int transId, QList<DomainObject *> objects){
         QList<Employee *> employees;
+        foreach (DomainObject *o, objects) employees.append(static_cast<Employee *>(o));
+
+        emit on_finished_updating_employees(employees);
 
         r->deleteLater();
     });

@@ -51,6 +51,9 @@ void EmployeeRow::update(Employee *_employee)
 
     setColumnText(NICK_NAME, employee->getNickName());
     setColumnChecked(ADMIN, employee->isAdmin());
+
+    modified = false;
+    modifiedColumns.clear();
 }
 
 void EmployeeRow::setColumnText(int column, QString text)

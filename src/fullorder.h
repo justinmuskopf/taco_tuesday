@@ -15,6 +15,8 @@ public:
     void addOrder(IndividualOrder *order);
     void updateOrder(IndividualOrder *order);
 
+    QList<IndividualOrder *> getIndividualOrders();
+
     QJsonObject serialize() override;
 
     friend FullOrder *JsonParser::parseFullOrder(QJsonObject object);

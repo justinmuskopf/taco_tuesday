@@ -16,8 +16,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     apiHandler = TacoTuesdayApiHandler::Instance();
 
     ui->setupUi(this);
-    initTabs();
-
     requestButtons.append(ui->employeeRefreshButton);
     requestButtons.append(ui->employeeSaveButton);
     requestButtons.append(ui->generalRefreshButton);
@@ -25,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     ui->requestCooldownBar->setValue(0);
     connect(apiHandler, &TacoTuesdayApiHandler::on_request, this, &MainWindow::on_coolDown_triggered);
     connect(ui->requestCooldownBar, &CooldownBar::cooled, this, &MainWindow::enableRequestButtons);
+
+    initTabs();
 }
 
 void MainWindow::initTabs()
@@ -38,6 +38,21 @@ void MainWindow::initGeneralTab()
 {
     ui->generalTab->setLayout(ui->generalTabLayout);
     tabs.insert(GENERAL_TAB, ui->generalTab);
+
+    connect(apiHandler, &TacoTuesdayApiHandler::on_finished_getting_orders, [=](QList<FullOrder *> orders){
+        ui->generalFullOrderCount->display(orders.size());
+        int individualOrderCount = 0;
+        foreach (FullOrder *order, orders)
+        {
+            individualOrderCount += order->getIndividualOrders().size();
+        }
+
+        ui->generalIndividualOrderCount->display(individualOrderCount);
+    });
+
+    connect(apiHandler, &TacoTuesdayApiHandler::on_finished_getting_employees, [=](QList<Employee *> employees){
+        ui->generalEmployeeCount->display(employees.size());
+    });
 }
 
 
@@ -62,10 +77,6 @@ void MainWindow::initTacos()
 {
     Order::initTacos();
 
-    connect(apiHandler, &TacoTuesdayApiHandler::on_finished_getting_tacos, [=](QList<Taco *> tacos){
-        qDebug() << tacos;
-    });
-
     apiHandler->requestTacos();
 }
 
@@ -80,14 +91,14 @@ void MainWindow::initEmployees()
 
 void MainWindow::initOrders()
 {
-    Order::initTacos();
+    //Order::initTacos();
 
     connect(apiHandler, &TacoTuesdayApiHandler::on_finished_getting_orders, [=](QList<FullOrder *> orders){
        ui->orderTree->setOrders(orders);
     });
 
     connect(apiHandler, &TacoTuesdayApiHandler::on_finished_getting_tacos, [=](QList<Taco *> tacos){
-        apiHandler->requestFullOrders();
+       apiHandler->requestFullOrders();
     });
 }
 
@@ -104,10 +115,7 @@ void MainWindow::on_employeeRefreshButton_clicked()
 void MainWindow::on_employeeSaveButton_clicked()
 {
     QList<Employee *> employees = ui->employeeTable->save();
-    foreach (Employee *employee, employees)
-    {
-        apiHandler->updateEmployee(employee);
-    }
+    apiHandler->updateEmployees(employees);
 }
 
 void MainWindow::on_actionConfigure_triggered()
@@ -135,6 +143,11 @@ void MainWindow::enableRequestButtons()
 
 void MainWindow::on_coolDown_triggered()
 {
+    if (ui->requestCooldownBar->cooling())
+    {
+        return;
+    }
+
     disableRequestButtons();
     ui->requestCooldownBar->beginCoolingSequence();
 }

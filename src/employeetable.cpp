@@ -1,4 +1,5 @@
  #include "employeetable.h"
+#include "tacotuesdayapihandler.h"
 
 #include <QHeaderView>
 #include <QDebug>
@@ -6,6 +7,9 @@
 EmployeeTable::EmployeeTable(QWidget *parent) : QTableWidget(parent)
 {
     setColumnCount(EmployeeRow::NUM_COLUMNS);
+
+    connect(TacoTuesdayApiHandler::Instance(), &TacoTuesdayApiHandler::on_finished_updating_employees,
+            this, &EmployeeTable::updateEmployees);
 }
 
 bool EmployeeTable::hasEmployeeRow(QString slackId)
@@ -28,6 +32,14 @@ void EmployeeTable::addEmployee(Employee *employee)
     else
     {
         addEmployeeRow(employee);
+    }
+}
+
+void EmployeeTable::updateEmployees(QList<Employee *> employees)
+{
+    foreach (Employee *employee, employees)
+    {
+        addEmployee(employee);
     }
 }
 
@@ -86,6 +98,7 @@ void EmployeeTable::onRowModify(QTableWidgetItem *column)
 
 void EmployeeTable::resetData(QList<Employee *> employees)
 {
+    qDebug("RESETTING DATA\nRESETTING DATA\nRESETTING DATA\nRESETTING DATA\n");
     disconnect(this, &EmployeeTable::itemChanged, this, &EmployeeTable::onRowModify);
 
     foreach (EmployeeRow *row, rows)

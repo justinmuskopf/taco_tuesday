@@ -11,7 +11,7 @@ class CooldownBar : public QProgressBar
 public:
     CooldownBar(QWidget *parent = nullptr);
     void beginCoolingSequence();
-
+    bool cooling();
     void incrementProgessBar();
 signals:
     void cooled();
@@ -25,6 +25,7 @@ private:
     int cooldownMs;
     int numSteps;
     int stepCount = 0;
+    bool alreadyCooling = false;
 
 };
 

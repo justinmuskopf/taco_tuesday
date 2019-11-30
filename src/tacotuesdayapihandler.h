@@ -26,7 +26,7 @@ public:
     void requestFullOrderById(QString id);
     void requestApiStatusCheck();
 
-    void updateEmployee(Employee *employee);
+    void updateEmployees(QList<Employee *> employee);
 
     void refresh();
 signals:
@@ -36,8 +36,7 @@ signals:
     void on_finished_getting_orders(QList<FullOrder *> orders);
     void on_finished_getting_tacos(QList<Taco *> tacos);
     void on_finished_pinging_api(bool apiIsUp);
-
-    void on_finished_updating_employee(int transId, Employee *employee);
+    void on_finished_updating_employees(QList<Employee *> employee);
 private:
     TacoTuesdayApiHandler();
     static TacoTuesdayApiHandler *instance;

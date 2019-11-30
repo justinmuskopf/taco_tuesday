@@ -24,6 +24,9 @@ public:
     Order();
     Order(Order *);
 
+    void setId(int);
+    int getId();
+
     void addTacos(QString tacoType, int count);
     float price(float pastorPrice);
     OrderedTacoMap getTacoCounts();
@@ -35,6 +38,7 @@ public:
 signals:
     void updated(Order *order);
 private:
+    int id;
     bool requestedTacos = false;
     static TacoPriceMap TacoPrices;
     void setCreatedAt(QString dateString);

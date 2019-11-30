@@ -8,6 +8,7 @@ ApiReply::ApiReply(int transactionId, QNetworkReply *reply, QList<DomainObject *
     this->transactionId = transactionId;
     this->reply = reply;
     this->jpMethod = jpMethod;
+
     connect(reply, &QNetworkReply::finished, this, &ApiReply::on_reply_finished);
 }
 
@@ -18,7 +19,9 @@ void ApiReply::on_reply_finished()
         return logger->error("Error retrieving results from API: " + reply->errorString());
     }
 
-    DomainList objects = (JsonParser::Instance()->*jpMethod)(reply->readAll());
+    jsonString = reply->readAll();
+
+    DomainList objects = (JsonParser::Instance()->*jpMethod)(jsonString);
 
     emit finished(transactionId, objects);
 }
@@ -31,4 +34,9 @@ bool ApiReply::error()
 QString ApiReply::errorString()
 {
     return reply->errorString();
+}
+
+QString ApiReply::json()
+{
+    return jsonString;
 }
